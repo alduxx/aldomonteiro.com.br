@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+    web:
+        build: .
+        command: python -m http.server 8080
+        volumes:
+            - .:/code
+        ports:
+            - "80:8080"
