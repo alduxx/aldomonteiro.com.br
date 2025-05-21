@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Poetry on Aldo Monteiro</title>
+    <link>http://localhost:1313/categories/poetry/</link>
+    <description>Recent content in Poetry on Aldo Monteiro</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>{year}</copyright>
+    <lastBuildDate>Wed, 16 Apr 2025 18:25:38 -0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/poetry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>No mistério do sem-fim</title>
+      <link>http://localhost:1313/poetry/no-mist%C3%A9rio-do-sem-fim/</link>
+      <pubDate>Wed, 16 Apr 2025 18:25:38 -0300</pubDate>
+      <guid>http://localhost:1313/poetry/no-mist%C3%A9rio-do-sem-fim/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Cecília Meireles&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;No mistério do sem-fim&lt;br&gt;&#xA;equilibra-se um planeta.&lt;/p&gt;&#xA;&lt;p&gt;E, no planeta, um jardim,&lt;br&gt;&#xA;e, no jardim, um canteiro;&lt;br&gt;&#xA;no canteiro uma violeta,&lt;br&gt;&#xA;e, sobre ela, o dia inteiro,&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Ozymandias</title>
+      <link>http://localhost:1313/poetry/ozymandias/</link>
+      <pubDate>Tue, 15 Apr 2025 18:25:38 -0300</pubDate>
+      <guid>http://localhost:1313/poetry/ozymandias/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Percy Bysshe Shelley&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;I met a traveler from an antique land&lt;br&gt;&#xA;Who said: Two vast and trunkless legs of stone&lt;br&gt;&#xA;Stand in the desert. Near them, on the sand,&lt;br&gt;&#xA;Half sunk, a shattered visage lies, whose frown&lt;br&gt;&#xA;And wrinkled lips, and sneer of cold command,&lt;br&gt;&#xA;Tell that its sculptor well those passions read&lt;br&gt;&#xA;Whitch yet survive, stamped on those lifeless things&lt;br&gt;&#xA;The hand that mocked them and the heart that fed.&lt;br&gt;&#xA;And on the pedestal These words appear &amp;ndash;&lt;br&gt;&#xA;&amp;ldquo;My name is Ozymandias, king of kings:&lt;br&gt;&#xA;Look on my works, ye Mighty, and despair!&amp;rdquo;&lt;br&gt;&#xA;Nothing besides remains. Round the decay&lt;br&gt;&#xA;Of that colossal wreck, boundless and bare&lt;br&gt;&#xA;The lone and level sands stretch far away.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Road not Taken</title>
+      <link>http://localhost:1313/poetry/the-road-not-taken/</link>
+      <pubDate>Mon, 14 Apr 2025 18:25:38 -0300</pubDate>
+      <guid>http://localhost:1313/poetry/the-road-not-taken/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Robert Frost&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Two roads diverged in a yellow wood,&lt;br&gt;&#xA;And sorry I could not travel both&lt;br&gt;&#xA;And being one traveler, long I stood&lt;br&gt;&#xA;And looked down one as far as I could&lt;br&gt;&#xA;To where it bend in the undergrowth;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

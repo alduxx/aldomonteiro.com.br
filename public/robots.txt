@@ -1,0 +1,35 @@
+User-agent: *
+
+Disallow: /categories/
+
+Disallow: /poetry/no-mist%C3%A9rio-do-sem-fim/
+
+Disallow: /
+
+Disallow: /categories/poetry/
+
+Disallow: /poetry/
+
+Disallow: /tags/poetry/
+
+Disallow: /tags/
+
+Disallow: /poetry/ozymandias/
+
+Disallow: /poetry/the-road-not-taken/
+
+Disallow: /categories/hello/
+
+Disallow: /tags/hello/
+
+Disallow: /posts/markdown-cheat-sheet/
+
+Disallow: /posts/
+
+Disallow: /tags/whatsapp/
+
+Disallow: /categories/css/
+
+Disallow: /categories/javascript/
+
+Disallow: /categories/uncategories/
