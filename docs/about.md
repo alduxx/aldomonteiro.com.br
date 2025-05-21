@@ -1,3 +1,0 @@
-# Sobre
-
-Eu, Aldo Monteiro

@@ -1,8 +1,0 @@
-site_name: Aldo Monteiro
-theme:
-  name: readthedocs
-  locale: en
-
-nav:
-  - 'index.md'
-  - 'about.md'
