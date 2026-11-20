@@ -1,0 +1,2713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="figure">
+  <title>O Paradoxo de Condorcet e o Poder do Pautador em R² — Teorema de McKelvey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/contrib/auto-render.min.js" defer></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Page and surfaces (Figure style) */
+      --background: #ffffff;
+      --surface-container-low: #f7f7f7;
+      --surface-container: #f2f2f2;
+      --surface-container-high: #ececec;
+
+      /* Ink */
+      --on-surface: #121212;
+      --on-surface-variant: #5f5f5f;
+
+      /* Rules */
+      --outline: #8a8a8a;
+      --outline-variant: #e3e3e3;
+
+      /* Accents */
+      --primary: #121212;
+      --on-primary: #ffffff;
+      --primary-container: #e8e8e8;
+      --on-primary-container: #121212;
+      --secondary: #1f5fa8;
+      --tertiary: #b43c0b;
+      --error: #b42318;
+      --on-error: #ffffff;
+
+      /* Data series */
+      --data-1: #e8590c;
+      --data-2: #2f6db5;
+      --data-3: #1b8a6b;
+      --data-4: #8e5bb5;
+      --data-context: #c4c4c4;
+
+      /* Fonts */
+      --font-headline: 'Schibsted Grotesk', sans-serif;
+      --font-body: 'Newsreader', serif;
+      --font-label: 'Roboto Mono', monospace;
+
+      /* Shape */
+      --rounded: 0.25rem;
+      --rounded-lg: 0;
+      --rounded-full: 0.25rem;
+
+      /* Style effects */
+      --ink-rule: 1px solid var(--on-surface);
+      --hairline: 1px solid var(--outline-variant);
+      --grid-dash: 2 3;
+      --story-stroke: 3px;
+      --compare-stroke: 2px;
+      --context-stroke: 1.4px;
+      --bar-height: 6px;
+      --highlight-1: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-1) 15%, var(--background)) 60%);
+      --highlight-2: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-2) 15%, var(--background)) 60%);
+      --highlight-3: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-3) 15%, var(--background)) 60%);
+
+      /* Shared semantic & focus tokens */
+      --positive: #1b8a6b;
+      --warning: #b43c0b;
+      --focus: #1f5fa8;
+
+      /* Narrative type scale */
+      --display-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.75rem);
+      --headline-size: clamp(1.55rem, 1.15rem + 1.5vw, 2.25rem);
+      --subhead-size: clamp(1.15rem, 1.02rem + 0.5vw, 1.375rem);
+      --body-size: clamp(1.0625rem, 1rem + 0.2vw, 1.15rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Flush-left editorial prose column */
+    .prose-col {
+      max-width: 66ch;
+    }
+
+    .kicker {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--tertiary);
+      margin: 0 0 var(--space-sm);
+    }
+
+    h1 {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--display-size);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-md);
+    }
+
+    h2 {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--headline-size);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-md);
+      max-width: 34ch;
+    }
+
+    h3 {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-xs);
+    }
+
+    .deck {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+      line-height: 1.45;
+      color: var(--on-surface-variant);
+      margin: 0 0 var(--space-lg);
+      max-width: 58ch;
+    }
+
+    p {
+      margin: 0 0 var(--space-md);
+    }
+
+    .section-block {
+      border-top: var(--hairline);
+      padding-top: var(--space-xl);
+    }
+
+    /* Color-keyed prose highlights */
+    .hl-1 {
+      background: var(--highlight-1);
+      color: var(--tertiary);
+      font-weight: 500;
+      padding: 0 0.15em;
+    }
+    .hl-2 {
+      background: var(--highlight-2);
+      color: var(--secondary);
+      font-weight: 500;
+      padding: 0 0.15em;
+    }
+    .hl-3 {
+      background: var(--highlight-3);
+      color: var(--positive);
+      font-weight: 500;
+      padding: 0 0.15em;
+    }
+
+    /* Ink-ruled stat row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    .stat {
+      border-top: var(--ink-rule);
+      padding-top: var(--space-sm);
+      border-radius: var(--rounded-lg);
+    }
+    .stat-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+    }
+    .stat-value {
+      font-family: var(--font-label);
+      font-weight: 500;
+      font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      color: var(--on-surface);
+      line-height: 1.2;
+    }
+    .stat-delta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+    }
+    .stat-delta.story { color: var(--tertiary); }
+    .stat-delta.compare { color: var(--secondary); }
+    .stat-delta.good { color: var(--positive); }
+    .stat-bar {
+      height: var(--bar-height);
+      background: var(--surface-container-high);
+      margin-top: var(--space-sm);
+    }
+    .stat-bar > span {
+      display: block;
+      height: 100%;
+      background: var(--data-1);
+      transition: width var(--dur-long) var(--ease-out);
+    }
+
+    /* Buttons & Interactive controls */
+    button, input, select {
+      font-family: inherit;
+    }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      border-radius: var(--rounded);
+      border: 1px solid var(--outline);
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover:not(:disabled) {
+      border-color: var(--on-surface);
+      background: var(--surface-container-low);
+    }
+    .btn:active:not(:disabled) {
+      background: var(--primary-container);
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--on-surface-variant);
+      border-color: var(--on-surface-variant);
+    }
+    .btn-active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-active:hover:not(:disabled) {
+      background: var(--primary);
+    }
+    .btn-story {
+      background: var(--tertiary);
+      color: var(--on-primary);
+      border-color: var(--tertiary);
+    }
+    .btn-story:hover:not(:disabled) {
+      background: var(--on-surface);
+      border-color: var(--on-surface);
+    }
+
+    /* Figure wrapper & newsroom chart furniture */
+    .figure-wrap {
+      margin-top: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .figure-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+      border-bottom: var(--ink-rule);
+      padding-bottom: var(--space-sm);
+    }
+    .chart-title {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: var(--subhead-size);
+      margin: 0;
+    }
+    .chart-sub, .source {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+    .source {
+      margin-top: var(--space-xs);
+    }
+
+    /* Two-column interactive layouts */
+    .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .split-equal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    /* Sidebar / control strip using surface-container-low */
+    .control-strip {
+      background: var(--surface-container-low);
+      border-top: var(--ink-rule);
+      border-bottom: var(--hairline);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: var(--space-md);
+      align-items: end;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+    }
+    select, input[type="number"] {
+      min-height: 44px;
+      padding: 0 var(--space-md) 0 var(--space-sm);
+      background: var(--background);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+    }
+    select {
+      padding-right: var(--space-xl);
+    }
+    input[type="range"] {
+      width: 100%;
+      min-height: 44px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .toggle-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      padding-top: var(--space-xs);
+      border-top: var(--hairline);
+    }
+    .toggle-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 36px;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      cursor: pointer;
+    }
+    .toggle-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Playback bar */
+    .playback-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+    .scrubber-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex: 1 1 240px;
+    }
+    .scrubber-wrap input[type="range"] {
+      min-height: 36px;
+    }
+
+    /* Plot containers */
+    .plot-box {
+      position: relative;
+      width: 100%;
+      min-height: 440px;
+      background: var(--background);
+    }
+    .plot-box svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      touch-action: none;
+    }
+    .chart-box {
+      width: 100%;
+      min-height: 270px;
+    }
+    .chart-box svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Tables (Figure style: no vertical lines, ink rule under header, hairlines between rows) */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-label);
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .data-table th {
+      text-align: left;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      padding: var(--space-xs) var(--space-sm) var(--space-sm);
+      border-bottom: var(--ink-rule);
+    }
+    .data-table th.num, .data-table td.num {
+      text-align: right;
+    }
+    .data-table td {
+      padding: var(--space-sm);
+      border-bottom: var(--hairline);
+      color: var(--on-surface);
+    }
+    .data-table tr.row-highlight td {
+      background: var(--surface-container-low);
+      font-weight: 500;
+    }
+
+    /* Badges / squarish tabs */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--rounded-full);
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+    }
+    .tag.story {
+      background: color-mix(in srgb, var(--data-1) 14%, var(--background));
+      color: var(--tertiary);
+    }
+    .tag.compare {
+      background: color-mix(in srgb, var(--data-2) 14%, var(--background));
+      color: var(--secondary);
+    }
+    .tag.good {
+      background: color-mix(in srgb, var(--data-3) 14%, var(--background));
+      color: var(--positive);
+    }
+
+    /* Step pills timeline */
+    .step-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      margin-top: var(--space-sm);
+    }
+    .step-pill {
+      min-width: 40px;
+      min-height: 36px;
+      padding: 0 var(--space-sm);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      background: var(--background);
+      color: var(--on-surface-variant);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .step-pill:hover {
+      border-color: var(--on-surface);
+      color: var(--on-surface);
+    }
+    .step-pill.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .step-pill.in-t {
+      border-bottom: 3px solid var(--positive);
+    }
+
+    /* Details panel & proof cards */
+    .vote-card {
+      border-top: var(--ink-rule);
+      padding-top: var(--space-md);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .vote-narrative {
+      background: var(--surface-container-low);
+      padding: var(--space-md);
+      border-left: 3px solid var(--data-1);
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+    .vote-narrative.compare-accent {
+      border-left-color: var(--data-2);
+    }
+    .vote-narrative.good-accent {
+      border-left-color: var(--data-3);
+    }
+
+    details.methods-box {
+      background: var(--surface-container-low);
+      border-top: var(--hairline);
+      border-bottom: var(--hairline);
+      padding: var(--space-md);
+      margin-top: var(--space-md);
+    }
+    details.methods-box summary {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      font-size: 0.98rem;
+      cursor: pointer;
+      list-style-position: outside;
+      padding: var(--space-xs) 0;
+    }
+    details.methods-box .methods-body {
+      margin-top: var(--space-md);
+      font-size: 0.98rem;
+      max-width: 68ch;
+    }
+
+    /* Proof steps grid */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    .proof-step {
+      border-top: var(--ink-rule);
+      padding-top: var(--space-sm);
+    }
+    .proof-step .step-num {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-xs);
+    }
+
+    /* SVG classes (strictly token-driven) */
+    .svg-gridline {
+      stroke: var(--outline-variant);
+      stroke-width: 1;
+      stroke-dasharray: var(--grid-dash);
+    }
+    .svg-axis {
+      stroke: var(--on-surface);
+      stroke-width: 1.25;
+    }
+    .svg-tick {
+      font-family: var(--font-label);
+      font-size: 11px;
+      fill: var(--on-surface-variant);
+    }
+    .svg-label-mono {
+      font-family: var(--font-label);
+      font-size: 11.5px;
+      fill: var(--on-surface);
+    }
+    .svg-label-story {
+      font-family: var(--font-label);
+      font-size: 11.5px;
+      font-weight: 500;
+      fill: var(--tertiary);
+    }
+    .svg-label-compare {
+      font-family: var(--font-label);
+      font-size: 11.5px;
+      font-weight: 500;
+      fill: var(--secondary);
+    }
+    .svg-label-good {
+      font-family: var(--font-label);
+      font-size: 11.5px;
+      font-weight: 500;
+      fill: var(--positive);
+    }
+    .svg-circle-context {
+      fill: none;
+      stroke: var(--data-context);
+      stroke-width: 1.4;
+      stroke-dasharray: 4 3;
+    }
+    .svg-circle-v0 {
+      fill: none;
+      stroke: var(--data-2);
+      stroke-width: 1.6;
+      stroke-dasharray: 5 3;
+    }
+    .svg-circle-v1 {
+      fill: none;
+      stroke: var(--data-1);
+      stroke-width: 1.8;
+    }
+    .svg-circle-v2 {
+      fill: none;
+      stroke: var(--data-3);
+      stroke-width: 1.6;
+      stroke-dasharray: 5 3;
+    }
+    .svg-lens-inactive {
+      fill: color-mix(in srgb, var(--data-2) 10%, transparent);
+      stroke: var(--data-2);
+      stroke-width: 1;
+      stroke-opacity: 0.45;
+    }
+    .svg-lens-active {
+      fill: color-mix(in srgb, var(--data-1) 20%, transparent);
+      stroke: var(--data-1);
+      stroke-width: 1.5;
+    }
+    .svg-target-fill {
+      fill: color-mix(in srgb, var(--data-3) 12%, transparent);
+    }
+    .svg-target-hatch {
+      stroke: color-mix(in srgb, var(--data-3) 28%, transparent);
+      stroke-width: 1;
+    }
+    .svg-path-future {
+      fill: none;
+      stroke: var(--data-context);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+    }
+    .svg-path-story {
+      fill: none;
+      stroke: var(--data-1);
+      stroke-width: var(--story-stroke);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .svg-path-compare {
+      fill: none;
+      stroke: var(--data-2);
+      stroke-width: var(--compare-stroke);
+    }
+    .svg-path-good {
+      fill: none;
+      stroke: var(--data-3);
+      stroke-width: var(--compare-stroke);
+    }
+    .svg-dot-voter {
+      fill: var(--background);
+      stroke-width: 2.5;
+      cursor: grab;
+    }
+    .svg-dot-voter:active { cursor: grabbing; }
+    .svg-dot-p0 {
+      fill: var(--background);
+      stroke: var(--on-surface);
+      stroke-width: 2.5;
+      cursor: grab;
+    }
+    .svg-dot-current {
+      fill: var(--data-1);
+      stroke: var(--background);
+      stroke-width: 2;
+    }
+    .svg-dot-opt {
+      fill: var(--data-3);
+      stroke: var(--background);
+      stroke-width: 2;
+    }
+    .svg-vector-u {
+      stroke: var(--secondary);
+      stroke-width: 1.8;
+    }
+    .svg-vector-d {
+      stroke: var(--tertiary);
+      stroke-width: 2.4;
+    }
+
+    .footer-note {
+      border-top: var(--ink-rule);
+      padding-top: var(--space-md);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    /* Container queries for compact card adjustments */
+    .card-container { container-type: inline-size; }
+    @container (max-width: 440px) {
+      .data-table { font-size: 0.78rem; }
+      .data-table th, .data-table td { padding: var(--space-xs); }
+    }
+
+    /* Mobile layout shift */
+    @media (max-width: 880px) {
+      .split-layout, .split-equal {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md);
+        gap: var(--space-xl);
+      }
+      .plot-box {
+        min-height: 320px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-grid">
+
+    <!-- OPENING HEADER & THESIS -->
+    <header class="prose-col">
+      <p class="kicker">Escolha Social &amp; Otimização · Geometria em R²</p>
+      <h1>O Paradoxo de Condorcet e o Poder do Pautador</h1>
+      <p class="deck">
+        Por que a votação por maioria simples produz ciclos intermináveis no plano — e como quem define a ordem das propostas pode conduzir um grupo inteiro até uma decisão estritamente pior para todos os demais.
+      </p>
+      <p>
+        Imagine três votantes cujas opiniões sobre dois temas formam pontos no plano cartesiano $\mathbb{R}^2$: o <strong>Votante 1</strong> em $(1, 1)$, o <strong>Votante 2</strong> em $(6, 3)$ e o <strong>Votante 3</strong> em $(1, 7)$. Cada votante ordena qualquer política proposta pela menor <strong>distância euclidiana</strong> até a sua posição ideal.
+      </p>
+      <p>
+        Quando as decisões ocorrem por duelos sucessivos de maioria simples, a regra ignora a <span class="hl-1">intensidade da insatisfação</span>. Como consequência, abre-se uma fissura geométrica explorada pelo <strong>Teorema de McKelvey (1976, 1979)</strong>: um único agente que controle a pauta consegue encadear maiorias alternadas e levar a política inicial $p_0$ para dentro da <span class="hl-3">região-alvo $T$</span>, onde todos os outros votantes ficam piores do que no ponto de partida.
+      </p>
+
+      <div class="stats-row" aria-label="Indicadores principais do problema">
+        <div class="stat">
+          <div class="stat-label">Política inicial p₀ = A</div>
+          <div class="stat-value">(2,00 ; 3,00)</div>
+          <div class="stat-delta">Discordância total Z = 10,36</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Ótimo PNL x* (Mediana Geométrica)</div>
+          <div class="stat-value">(2,67 ; 3,33)</div>
+          <div class="stat-delta good">Mínimo global Z = 10,25</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Posição do Pautador (Votante 2)</div>
+          <div class="stat-value">(6,00 ; 3,00)</div>
+          <div class="stat-delta story">Alvo dentro de T (dist. zero para V2)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Piora dos demais ao atingir (6,3)</div>
+          <div class="stat-value">5,39 e 6,40</div>
+          <div class="stat-delta story">Contra 2,24 (V1) e 4,12 (V3) em p₀</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: CONDORCET PARADOX & PNL SOLUTION -->
+    <section class="section-block" aria-labelledby="sec-condorcet">
+      <div class="prose-col">
+        <p class="kicker">Parte 1 · Item (a) — Ciclo de Maioria vs. Otimização</p>
+        <h2 id="sec-condorcet">Entre A, B e C, a maioria forma o ciclo A → B → C → A, mas o modelo de distância total escolhe A sem ambiguidade</h2>
+        <p>
+          Considere as três políticas candidatas $A=(2,3)$, $B=(5,1)$ e $C=(4,6)$. Na votação pareada, cada duelo conta apenas quantos votantes ficam mais próximos — não importa por quanto. No duelo <span class="hl-1">$A \times C$</span>, por exemplo, $C$ vence por 2 a 1 porque aproxima os votantes 2 e 3 em apenas $0{,}39$ e $0{,}96$ unidades, mesmo infligindo ao votante 1 uma perda de $3{,}59$ unidades.
+        </p>
+        <p>
+          Ao substituir a maioria simples pela minimização da soma das distâncias $Z(x) = \sum_{i=1}^v \|x - a_i\|_2$ (Programação Não Linear), a intensidade entra na conta: $A$ tem $Z=10{,}36$ e vence $C$ ($12{,}60$) e $B$ ($13{,}45$). Se pudermos propor qualquer ponto em $\mathbb{R}^2$, o ótimo contínuo recai em <span class="hl-3">$x^* \approx (2{,}67;\ 3{,}33)$</span>, com $Z \approx 10{,}245$.
+        </p>
+      </div>
+
+      <div class="figure-wrap">
+        <div class="figure-header">
+          <div>
+            <h3 class="chart-title">Duelos pareados em R² e curvas de indiferença no exemplo da Questão 40</h3>
+            <div class="chart-sub">Eixos: Tema 1 (x₁) e Tema 2 (x₂) · Círculos mostram pontos equidistantes da política incumbente</div>
+          </div>
+          <div class="btn-row" role="group" aria-label="Selecionar duelo de Condorcet">
+            <button type="button" class="btn btn-active" id="duel-btn-ab" onclick="setDuel('AB')">Duelo A × B</button>
+            <button type="button" class="btn" id="duel-btn-bc" onclick="setDuel('BC')">Duelo B × C</button>
+            <button type="button" class="btn" id="duel-btn-ca" onclick="setDuel('CA')">Duelo C × A</button>
+            <button type="button" class="btn" id="duel-btn-opt" onclick="setDuel('OPT')">Ótimo PNL x*</button>
+          </div>
+        </div>
+
+        <div class="split-layout">
+          <div class="plot-box" style="min-height: 440px;">
+            <svg id="condorcet-svg" viewBox="0 0 600 540" aria-label="Plano cartesiano do Paradoxo de Condorcet"></svg>
+          </div>
+
+          <div class="card-container" style="display: grid; gap: var(--space-lg);">
+            <div class="vote-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="tag story" id="duel-badge">A vence B (2 a 1)</span>
+                <span class="chart-sub" id="duel-sub">Incumbente: B(5,1) · Desafiante: A(2,3)</span>
+              </div>
+              <p class="vote-narrative" id="duel-explanation" style="margin: 0;">
+                Os votantes 1 e 3 ficam estritamente dentro dos círculos de indiferença de B quando avaliam A. Apenas o votante 2 prefere B.
+              </p>
+              <table class="data-table" aria-label="Distâncias no duelo selecionado">
+                <thead>
+                  <tr>
+                    <th>Votante</th>
+                    <th class="num" id="duel-col-inc">Dist. B</th>
+                    <th class="num" id="duel-col-chal">Dist. A</th>
+                    <th class="num">Ganho</th>
+                    <th>Voto</th>
+                  </tr>
+                </thead>
+                <tbody id="duel-tbody"></tbody>
+              </table>
+            </div>
+
+            <div>
+              <h3 class="chart-title" style="font-size: 1rem;">Discordância total Z (soma das distâncias)</h3>
+              <div class="chart-sub">Menor valor indica maior acomodação coletiva</div>
+              <div class="chart-box" style="min-height: 170px; margin-top: var(--space-xs);">
+                <svg id="z-bar-svg" viewBox="0 0 420 175" aria-label="Gráfico de barras comparando Z das políticas"></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="source">Fonte: Formulação matemática e coordenadas da Questão 40 (itens a e b).</div>
+      </div>
+
+      <details class="methods-box">
+        <summary>Ver formulação de Programação Não Linear (Item a)</summary>
+        <div class="methods-body">
+          <p>
+            Sejam $i = 1,\dots,v$ os votantes, $j = 1,\dots,n$ os temas, $a_{ij}$ a posição do votante $i$ no tema $j$ e $x_j$ a posição escolhida da política. O problema que minimiza a discordância total é:
+          </p>
+          <p>
+            $$\min Z = \sum_{i=1}^{v} \sqrt{\sum_{j=1}^{n} (x_j - a_{ij})^2} \qquad \text{sujeito a } L_j \le x_j \le U_j,\quad j = 1,\dots,n.$$
+          </p>
+          <p>
+            Trata-se de um problema de <strong>Programação Não Linear (PNL)</strong>: embora as restrições de limites da escala $L_j \le x_j \le U_j$ sejam lineares (e fiquem inativas no ótimo da figura), a função objetivo envolve quadrados e raízes quadradas. Como $Z(x)$ é contínua e convexa, sempre possui mínimo global bem definido, eliminando o ciclo da maioria simples.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- SECTION 2: GEOMETRY PRE-TRAINING -->
+    <section class="section-block prose-col" aria-labelledby="sec-geometry">
+      <p class="kicker">Parte 2 · Anatomia Geométrica do Poder de Pauta</p>
+      <h2 id="sec-geometry">Três curvas de indiferença geram três lentes de maioria — e o zigue-zague alterna entre duas delas</h2>
+      <p>
+        Para qualquer política vigente $z \in \mathbb{R}^2$, o conjunto de pontos que derrotam $z$ por maioria simples — chamado de <strong>conjunto vencedor $W(z)$</strong> — é formado pelos pontos que estão dentro de pelo menos dois dos três círculos de indiferença centrados nos votantes passando por $z$. Geometricamente, $W(z)$ são três pétalas (ou lentes de interseção): uma para cada coalizão de dois votantes $\{1,2\}$, $\{2,3\}$ e $\{1,3\}$.
+      </p>
+      <p>
+        Quando não existe vencedor de Condorcet (os três votantes não são colineares), pelo menos duas lentes são sempre não vazias. Pelo <strong>Lema de Dois Votantes</strong>, se $z$ não está sobre o segmento entre $x_i$ e $x_j$, o vetor bissetriz <span class="hl-1">$\mathbf{d} = \mathbf{u}_i + \mathbf{u}_j$</span> (soma dos vetores unitários apontando de $z$ até $x_i$ e $x_j$) forma ângulo agudo com ambos os votantes ($\mathbf{a}_i \cdot \mathbf{d} = \|\mathbf{a}_i\|(1+\cos\theta) &gt; 0$). Um passo pequeno $\varepsilon\,\mathbf{d}$ aproxima a política de $i$ e $j$ ao mesmo tempo — aprovando a mudança por 2 a 1.
+      </p>
+      <p>
+        O agente pautador $a$ participa de duas coalizões: $\{a, b\}$ e $\{a, c\}$. Alternando os parceiros em <strong>zigue-zague</strong>, as componentes perpendiculares de $b$ e $c$ se compensam passo a passo, conduzindo $p_0$ até o interior da <span class="hl-3">região-alvo $T$</span> — o espaço fora dos círculos iniciais de $p_0$ de todos os outros votantes $i \neq a$.
+      </p>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE MCKELVEY ZIG-ZAG SIMULATOR -->
+    <section class="section-block" aria-labelledby="sec-mckelvey">
+      <div class="prose-col">
+        <p class="kicker">Parte 3 · Item (b) — Simulador Interativo do Teorema de McKelvey</p>
+        <h2 id="sec-mckelvey">A trajetória em zigue-zague: conduza p₀ passo a passo até T</h2>
+        <p>
+          Use os controles abaixo para reproduzir a sequência de votações controlada pelo pautador, avançar passo a passo ou arrastar diretamente os votantes e $p_0$ sobre o plano cartesiano. Observe como cada passo entra estritamente na <span class="hl-1">lente de maioria ativa</span>, embora o resultado final $p_m$ caia na <span class="hl-3">área sombreada $T$</span> — onde todos os demais votantes prefeririam ter ficado em $p_0$.
+        </p>
+      </div>
+
+      <div class="figure-wrap">
+        <!-- Control Strip -->
+        <div class="control-strip">
+          <div class="playback-bar">
+            <div class="btn-row" role="group" aria-label="Controles de reprodução">
+              <button type="button" class="btn btn-story" id="btn-play" onclick="togglePlay()">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" id="icon-play"><path d="M4 3.2v9.6L12.5 8 4 3.2z"/></svg>
+                <span id="label-play">Reproduzir</span>
+              </button>
+              <button type="button" class="btn" id="btn-prev" onclick="stepPrev()">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10.5 3.5L6 8l4.5 4.5"/><path d="M4 3.5v9"/></svg>
+                <span>Anterior</span>
+              </button>
+              <button type="button" class="btn" id="btn-next" onclick="stepNext()">
+                <span>Avançar</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5.5 3.5L10 8l-4.5 4.5"/><path d="M12 3.5v9"/></svg>
+              </button>
+              <button type="button" class="btn" id="btn-reset-anim" onclick="resetPlayback()">Reiniciar em p₀</button>
+            </div>
+
+            <div class="scrubber-wrap">
+              <label for="step-scrubber" class="field-label" id="scrubber-label" style="white-space: nowrap;">Passo 0 / 8</label>
+              <input type="range" id="step-scrubber" min="0" max="8" value="0" oninput="onScrubStep(this.value)">
+            </div>
+
+            <div class="field-group" style="min-width: 120px;">
+              <label for="select-speed" class="field-label">Velocidade</label>
+              <select id="select-speed" onchange="onChangeSpeed(this.value)">
+                <option value="1600">0,5× Lento</option>
+                <option value="950" selected>1× Normal</option>
+                <option value="480">2× Rápido</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="controls-grid">
+            <div class="field-group">
+              <label for="select-setter" class="field-label">Pautador (Agente a)</label>
+              <select id="select-setter" onchange="onChangeSetter(this.value)">
+                <option value="1" selected>Votante 2 — (6, 3) · Padrão</option>
+                <option value="0">Votante 1 — (1, 1)</option>
+                <option value="2">Votante 3 — (1, 7)</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="select-p0" class="field-label">Política inicial p₀</label>
+              <select id="select-p0" onchange="onChangePresetP0(this.value)">
+                <option value="A" selected>A = (2, 3) · Padrão da Questão 40</option>
+                <option value="B">B = (5, 1)</option>
+                <option value="C">C = (4, 6)</option>
+                <option value="CUSTOM">Personalizada (arraste p₀ no plano)</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="slider-steps" class="field-label">Número de votações (m): <span id="val-steps-text">8</span></label>
+              <input type="range" id="slider-steps" min="4" max="20" step="1" value="8" oninput="onChangeStepsSlider(this.value)">
+            </div>
+
+            <div class="field-group" style="align-self: end;">
+              <button type="button" class="btn" onclick="restoreDefaultScenario()">Restaurar Questão 40</button>
+            </div>
+          </div>
+
+          <div class="toggle-row" role="group" aria-label="Camadas geométricas">
+            <label class="toggle-item"><input type="checkbox" id="chk-target" checked onchange="renderAll()"> Região-alvo T</label>
+            <label class="toggle-item"><input type="checkbox" id="chk-circles" checked onchange="renderAll()"> Curvas de indiferença de pₖ</label>
+            <label class="toggle-item"><input type="checkbox" id="chk-lenses" checked onchange="renderAll()"> Lentes de maioria W(pₖ)</label>
+            <label class="toggle-item"><input type="checkbox" id="chk-vectors" checked onchange="renderAll()"> Vetores uᵢ, uⱼ e direção</label>
+            <label class="toggle-item"><input type="checkbox" id="chk-fullpath" checked onchange="renderAll()"> Trajetória completa até pₘ</label>
+          </div>
+        </div>
+
+        <!-- Main Cartesian Plot + Step Voting Detail -->
+        <div class="split-layout">
+          <div>
+            <div class="figure-header" style="margin-bottom: var(--space-sm);">
+              <div>
+                <h3 class="chart-title">Plano Cartesiano Interativo (R²) — Arraste p₀ ou os votantes</h3>
+                <div class="chart-sub" id="mckelvey-plot-sub">Zigue-zague com m = 8 passos · Pautador: Votante 2 em (6,0 ; 3,0)</div>
+              </div>
+              <span class="tag good" id="target-status-badge">Alvo T acessível</span>
+            </div>
+            <div class="plot-box" style="min-height: 520px;">
+              <svg id="mckelvey-svg" viewBox="0 0 620 580" aria-label="Plano cartesiano interativo do Teorema de McKelvey"></svg>
+            </div>
+            <div class="source">Dica: arraste o ponto p₀ ou qualquer votante (V1, V2, V3) no plano para recalcular as lentes de maioria e o zigue-zague em tempo real.</div>
+          </div>
+
+          <div class="card-container" style="display: grid; gap: var(--space-lg);">
+            <div class="vote-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <h3 class="chart-title" id="step-heading">Estado Inicial: p₀ = (2,00 ; 3,00)</h3>
+                <span class="tag story" id="step-coalition-tag">Aguardando 1ª votação</span>
+              </div>
+
+              <div class="vote-narrative" id="step-narrative">
+                A política começa em p₀ = (2,00 ; 3,00). Clique em "Reproduzir" ou "Avançar" para propor p₁ dentro da lente de maioria da coalizão {1, 2}.
+              </div>
+
+              <table class="data-table" aria-label="Detalhes da votação no passo atual">
+                <thead>
+                  <tr>
+                    <th>Votante</th>
+                    <th class="num">Em pₖ₋₁</th>
+                    <th class="num">Em pₖ</th>
+                    <th class="num">Passo Δ</th>
+                    <th class="num">Vs. p₀</th>
+                    <th>Voto</th>
+                  </tr>
+                </thead>
+                <tbody id="step-tbody"></tbody>
+              </table>
+
+              <div>
+                <div class="field-label" style="margin-bottom: var(--space-xs);">Linha do tempo das votações (clique para saltar)</div>
+                <div class="step-pills" id="step-pills" role="group" aria-label="Saltar para o passo"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanatory Charts Row -->
+        <div class="split-equal" style="margin-top: var(--space-lg); border-top: var(--hairline); padding-top: var(--space-lg);">
+          <div>
+            <h3 class="chart-title">Evolução da distância euclidiana por votante (k = 0 … m)</h3>
+            <div class="chart-sub">Linhas tracejadas marcam as distâncias iniciais em p₀; acima delas, o votante está pior que no início</div>
+            <div class="chart-box" style="min-height: 270px; margin-top: var(--space-sm);">
+              <svg id="dist-line-svg" viewBox="0 0 540 270" aria-label="Gráfico da evolução das distâncias por passo"></svg>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="chart-title">Balanço acumulado em relação a p₀ (Δdᵢ = dᵢ(pₖ) − dᵢ(p₀))</h3>
+            <div class="chart-sub">Valores negativos significam ganho (mais perto); positivos significam perda (mais longe)</div>
+            <div class="chart-box" style="min-height: 270px; margin-top: var(--space-sm);">
+              <svg id="delta-bar-svg" viewBox="0 0 540 270" aria-label="Gráfico de ganho ou perda acumulada em relação a p0"></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FORMAL PROOF STRUCTURE & DIMENSION COMPARISON -->
+    <section class="section-block" aria-labelledby="sec-proof">
+      <div class="prose-col">
+        <p class="kicker">Parte 4 · Síntese da Demonstração</p>
+        <h2 id="sec-proof">Os cinco passos do argumento — e por que o resultado falha em uma única dimensão (n = 1)</h2>
+        <p>
+          O teorema não depende de sorte numérica: sempre que $n \ge 2$ e não há vencedor de Condorcet, a maioria simples é manipulável por uma agenda suficientemente longa. Já em $n = 1$ (uma reta unidimensional), as preferências de pico único impedem qualquer desvio sustentável para longe do <strong>votante mediano</strong>.
+        </p>
+      </div>
+
+      <div class="proof-grid">
+        <div class="proof-step">
+          <div class="step-num">Passo 1 · Alvo T</div>
+          <h3>Conjunto aberto e não vazio</h3>
+          <p>
+            Define-se $T = \{q : \|q - x_i\| &gt; \|p_0 - x_i\|,\ \forall i \neq a\}$. Como $T$ é o exterior de um número finito de círculos fechados, ele é aberto e não vazio: basta chegar perto de um ponto de $T$.
+          </p>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-num">Passo 2 · 1 Votante</div>
+          <h3>Contração radial direta</h3>
+          <p>
+            Para qualquer $0 &lt; \varepsilon &lt; 1$, mover $z' = z + \varepsilon\,\mathbf{a}_i$ reduz a distância até $i$ para $(1-\varepsilon)\|\mathbf{a}_i\| &lt; \|\mathbf{a}_i\|$.
+          </p>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-num">Passo 3 · 2 Votantes</div>
+          <h3>A direção bissetriz d = uᵢ + uⱼ</h3>
+          <p>
+            Expandindo $\|x_i - (z+\varepsilon\mathbf{d})\|^2$, surge o termo $-2\varepsilon\|\mathbf{a}_i\|(1+\cos\theta)$. Fora do segmento $x_i x_j$, $\cos\theta \neq -1$, garantindo melhoria simultânea para $i$ e $j$ com $\varepsilon$ pequeno.
+          </p>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-num">Passo 4 · Zigue-zague</div>
+          <h3>Número arbitrário m de passos</h3>
+          <p>
+            Alternando as coalizões $\{a,b\}$ e $\{a,c\}$, o pautador compensa os desvios laterais e divide um caminho de comprimento $L$ em $m$ micro-passos de tamanho $\approx L/m$, tornando $m$ tão grande quanto se queira.
+          </p>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-num">Passo 5 · Conclusão</div>
+          <h3>Derrota coletiva em T</h3>
+          <p>
+            Ao alcançar $p_m \in T$ por uma cadeia onde cada $p_k$ vence $p_{k-1}$ por 2 a 1, a política final é estritamente menos preferível que $p_0$ para todos os demais votantes, embora nunca fosse aprovada em voto direto contra $p_0$.
+          </p>
+        </div>
+      </div>
+
+      <div class="stats-row" style="margin-top: var(--space-xl);">
+        <div class="stat">
+          <div class="stat-label">Dimensão n = 1 (reta)</div>
+          <div class="stat-value">Resultado Falso</div>
+          <div class="stat-delta">O votante mediano é vencedor de Condorcet e bloqueia o desvio</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Dimensão n ≥ 2 (plano ou maior)</div>
+          <div class="stat-value">Teorema de McKelvey</div>
+          <div class="stat-delta story">Para n &gt; 2, projeta-se p₀ no plano dos 3 votantes (passo unânime)</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-note">
+      <span>Base teórica: Questão 40 (Programação Matemática &amp; Teorema de McKelvey, 1976, 1979).</span>
+      <span>Modelo espacial euclidiano em R² · Cálculos geométricos exatos executados no navegador.</span>
+    </footer>
+  </main>
+
+  <script>
+    // =========================================================================
+    // DATA & STATE (Using backtick template literals for all strings)
+    // =========================================================================
+    const DEFAULT_VOTERS = [
+      { id: 0, name: `Votante 1`, short: `V1`, x: 1, y: 1 },
+      { id: 1, name: `Votante 2`, short: `V2`, x: 6, y: 3 },
+      { id: 2, name: `Votante 3`, short: `V3`, x: 1, y: 7 }
+    ];
+
+    const REF_POLICIES = {
+      A: { label: `A`, x: 2, y: 3 },
+      B: { label: `B`, x: 5, y: 1 },
+      C: { label: `C`, x: 4, y: 6 }
+    };
+
+    const state = {
+      duel: `AB`,
+      voters: DEFAULT_VOTERS.map(function (v) { return { id: v.id, name: v.name, short: v.short, x: v.x, y: v.y }; }),
+      setterIdx: 1, // Votante 2 (index 1)
+      p0: { x: 2, y: 3 },
+      p0Preset: `A`,
+      mSteps: 8,
+      currentStep: 0,
+      playing: false,
+      playSpeedMs: 950,
+      playTimer: null,
+      path: null,
+      dragging: null // { type: 'p0' | 'voter', idx: number }
+    };
+
+    function ensurePath() {
+      if (!state.path || !Array.isArray(state.path.steps) || state.path.steps.length === 0) {
+        state.path = computeZigZagPath(state.voters, state.setterIdx, state.p0, state.mSteps);
+      }
+      return state.path;
+    }
+
+    // =========================================================================
+    // MATH UTILITIES
+    // =========================================================================
+    function dist(a, b) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
+    function sub(a, b) {
+      return { x: a.x - b.x, y: a.y - b.y };
+    }
+    function add(a, b) {
+      return { x: a.x + b.x, y: a.y + b.y };
+    }
+    function scale(v, s) {
+      return { x: v.x * s, y: v.y * s };
+    }
+    function dot(a, b) {
+      return a.x * b.x + a.y * b.y;
+    }
+    function vecLen(v) {
+      return Math.hypot(v.x, v.y);
+    }
+    function fmt(num, digits) {
+      var d = typeof digits === `number` ? digits : 2;
+      return num.toFixed(d).replace(`.`, `,`);
+    }
+
+    // Weiszfeld algorithm for Geometric Median (PNL optimum x*)
+    function computeGeometricMedian(voters) {
+      var cur = {
+        x: (voters[0].x + voters[1].x + voters[2].x) / 3,
+        y: (voters[0].y + voters[1].y + voters[2].y) / 3
+      };
+      for (var iter = 0; iter < 80; iter++) {
+        var numX = 0, numY = 0, den = 0;
+        var hitVertex = false;
+        for (var i = 0; i < voters.length; i++) {
+          var d = dist(cur, voters[i]);
+          if (d < 1e-6) {
+            hitVertex = true;
+            break;
+          }
+          var w = 1 / d;
+          numX += voters[i].x * w;
+          numY += voters[i].y * w;
+          den += w;
+        }
+        if (hitVertex || den === 0) break;
+        var nxt = { x: numX / den, y: numY / den };
+        if (dist(cur, nxt) < 1e-6) {
+          cur = nxt;
+          break;
+        }
+        cur = nxt;
+      }
+      return cur;
+    }
+
+    function totalDiscordance(pt, voters) {
+      return dist(pt, voters[0]) + dist(pt, voters[1]) + dist(pt, voters[2]);
+    }
+
+    // Check if point is strictly in target region T (worse than p0 for all i != setterIdx)
+    function isInTargetT(pt, p0, voters, setterIdx) {
+      for (var i = 0; i < 3; i++) {
+        if (i === setterIdx) continue;
+        if (dist(pt, voters[i]) <= dist(p0, voters[i]) + 1e-5) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // Compute exact McKelvey zig-zag path
+    function computeZigZagPath(voters, setterIdx, p0, m) {
+      var others = [];
+      for (var i = 0; i < 3; i++) {
+        if (i !== setterIdx) others.push(i);
+      }
+      var bIdx = others[0];
+      var cIdx = others[1];
+      var xA = voters[setterIdx];
+      var xB = voters[bIdx];
+      var xC = voters[cIdx];
+
+      var d0 = [dist(p0, voters[0]), dist(p0, voters[1]), dist(p0, voters[2])];
+      var setterInT = isInTargetT(xA, p0, voters, setterIdx);
+
+      // Determine goal point inside T
+      var goal = { x: xA.x, y: xA.y };
+      if (!setterInT) {
+        // Push outward past xA away from midpoint of b and c until strictly outside both p0-circles
+        var midBC = { x: (xB.x + xC.x) / 2, y: (xB.y + xC.y) / 2 };
+        var away = sub(xA, midBC);
+        var awayLen = vecLen(away);
+        var dirOut = awayLen > 1e-4 ? scale(away, 1 / awayLen) : { x: 1, y: 0 };
+        for (var r = 0.5; r < 14; r += 0.25) {
+          var test = add(xA, scale(dirOut, r));
+          if (isInTargetT(test, p0, voters, setterIdx)) {
+            goal = add(test, scale(dirOut, 0.35));
+            break;
+          }
+        }
+      }
+
+      var steps = [{
+        k: 0,
+        pt: { x: p0.x, y: p0.y },
+        coalition: null,
+        partnerIdx: null,
+        loserIdx: null,
+        inT: false,
+        ua: null,
+        up: null,
+        bisector: null,
+        dists: d0.slice()
+      }];
+
+      var dStartGoal = dist(p0, goal);
+      var dEndTarget = setterInT ? Math.min(0.28, Math.max(0.08, 0.08 * dStartGoal)) : 0.25;
+
+      // Helper to find best valid step inside Lens {i1, i2}
+      function pickStepInLens(cur, i1, i2, loser, remaining, preferSide) {
+        var v1 = voters[i1];
+        var v2 = voters[i2];
+        var a1 = sub(v1, cur);
+        var a2 = sub(v2, cur);
+        var r1 = vecLen(a1);
+        var r2 = vecLen(a2);
+        if (r1 < 1e-5 || r2 < 1e-5) return null;
+
+        var u1 = scale(a1, 1 / r1);
+        var u2 = scale(a2, 1 / r2);
+        var bisRaw = add(u1, u2);
+        var bisLen = vecLen(bisRaw);
+        if (bisLen < 1e-4) return null; // collinear between i1 and i2
+
+        var dirs = [scale(bisRaw, 1 / bisLen)];
+        var nAngles = 48;
+        for (var a = 0; a < nAngles; a++) {
+          var ang = (2 * Math.PI * a) / nAngles;
+          var dv = { x: Math.cos(ang), y: Math.sin(ang) };
+          if (dot(dv, u1) > 0.06 && dot(dv, u2) > 0.06) {
+            dirs.push(dv);
+          }
+        }
+
+        var dCurGoal = dist(cur, goal);
+        var idealGoalDist = setterInT
+          ? dEndTarget + Math.max(0, dCurGoal - dEndTarget) * ((remaining - 1) / remaining)
+          : Math.max(0, dCurGoal * ((remaining - 1) / remaining));
+
+        // Axis perpendicular to cur -> goal for clean zig-zag separation
+        var toGoal = sub(goal, cur);
+        var toGoalLen = vecLen(toGoal);
+        var uGoal = toGoalLen > 1e-4 ? scale(toGoal, 1 / toGoalLen) : u1;
+        var perpGoal = { x: -uGoal.y, y: uGoal.x };
+        var partnerSideSign = Math.sign(dot(sub(v2, cur), perpGoal)) || preferSide;
+
+        var best = null;
+        var bestScore = -1e9;
+        var fracs = [0.16, 0.28, 0.42, 0.56, 0.70, 0.84];
+
+        for (var di = 0; di < dirs.length; di++) {
+          var dv2 = dirs[di];
+          var maxChord = Math.min(2 * dot(a1, dv2), 2 * dot(a2, dv2));
+          if (maxChord <= 1e-4) continue;
+
+          for (var fi = 0; fi < fracs.length; fi++) {
+            var cand = add(cur, scale(dv2, fracs[fi] * maxChord));
+            var nd1 = dist(cand, v1);
+            var nd2 = dist(cand, v2);
+            if (nd1 >= r1 - 1e-4 || nd2 >= r2 - 1e-4) continue;
+
+            var margin = Math.min(r1 - nd1, r2 - nd2);
+            var distToGoal = dist(cand, goal);
+            var pacingErr = Math.abs(distToGoal - idealGoalDist);
+
+            // Side displacement for unmistakable zig-zag
+            var stepVec = sub(cand, cur);
+            var lateral = dot(stepVec, perpGoal) * partnerSideSign;
+            var lateralBonus = lateral > 0 ? 0.35 * Math.min(lateral, 0.85) : -0.25;
+
+            var targetBonus = 0;
+            var candInT = isInTargetT(cand, p0, voters, setterIdx);
+            if (remaining === 1 && candInT) targetBonus = 25;
+            else if (remaining <= 2 && candInT) targetBonus = 4;
+
+            var score = -3.2 * pacingErr + 0.45 * Math.min(margin, 0.45) + lateralBonus + targetBonus;
+            if (score > bestScore) {
+              bestScore = score;
+              best = {
+                pt: cand,
+                u1: u1,
+                u2: u2,
+                bis: dirs[0],
+                i1: i1,
+                i2: i2,
+                loser: loser
+              };
+            }
+          }
+        }
+        return best;
+      }
+
+      for (var k = 1; k <= m; k++) {
+        var curPt = steps[k - 1].pt;
+        var remaining = m - k + 1;
+        var primaryPartner = (k % 2 === 1) ? bIdx : cIdx;
+        var secondaryPartner = (k % 2 === 1) ? cIdx : bIdx;
+
+        var chosen = null;
+        if (setterInT) {
+          chosen = pickStepInLens(curPt, setterIdx, primaryPartner, secondaryPartner, remaining, (k % 2 === 1 ? 1 : -1));
+          if (!chosen) {
+            chosen = pickStepInLens(curPt, setterIdx, secondaryPartner, primaryPartner, remaining, (k % 2 === 1 ? -1 : 1));
+          }
+        } else {
+          // Spiral using all 3 coalitions when xA is not initially inside T
+          var triads = [
+            [bIdx, cIdx, setterIdx],
+            [setterIdx, cIdx, bIdx],
+            [setterIdx, bIdx, cIdx]
+          ];
+          var pickIdx = (k - 1) % 3;
+          chosen = pickStepInLens(curPt, triads[pickIdx][0], triads[pickIdx][1], triads[pickIdx][2], remaining, 1);
+          if (!chosen) {
+            chosen = pickStepInLens(curPt, triads[(pickIdx + 1) % 3][0], triads[(pickIdx + 1) % 3][1], triads[(pickIdx + 1) % 3][2], remaining, 1);
+          }
+        }
+
+        if (!chosen) {
+          // Fallback: tiny step along bisector if near boundary
+          var pFallback = curPt;
+          steps.push({
+            k: k,
+            pt: pFallback,
+            coalition: [setterIdx, primaryPartner],
+            partnerIdx: primaryPartner,
+            loserIdx: secondaryPartner,
+            inT: isInTargetT(pFallback, p0, voters, setterIdx),
+            ua: null,
+            up: null,
+            bisector: null,
+            dists: [dist(pFallback, voters[0]), dist(pFallback, voters[1]), dist(pFallback, voters[2])]
+          });
+          continue;
+        }
+
+        var coal = [chosen.i1, chosen.i2].sort(function (a, b) { return a - b; });
+        steps.push({
+          k: k,
+          pt: chosen.pt,
+          coalition: coal,
+          partnerIdx: chosen.i2 === setterIdx ? chosen.i1 : chosen.i2,
+          loserIdx: chosen.loser,
+          inT: isInTargetT(chosen.pt, p0, voters, setterIdx),
+          ua: chosen.u1,
+          up: chosen.u2,
+          bisector: chosen.bis,
+          dists: [dist(chosen.pt, voters[0]), dist(chosen.pt, voters[1]), dist(chosen.pt, voters[2])]
+        });
+      }
+
+      return {
+        steps: steps,
+        setterInT: setterInT,
+        goal: goal
+      };
+    }
+
+    // =========================================================================
+    // SVG HELPER (1:1 aspect ratio Cartesian mapper)
+    // =========================================================================
+    function createSvgEl(tag, attrs) {
+      var el = document.createElementNS(`http://www.w3.org/2000/svg`, tag);
+      if (attrs) {
+        var keys = Object.keys(attrs);
+        for (var i = 0; i < keys.length; i++) {
+          el.setAttribute(keys[i], String(attrs[keys[i]]));
+        }
+      }
+      return el;
+    }
+
+    function makeMapper(vbW, vbH, worldMinX, worldMaxX, worldMinY, worldMaxY, padL, padR, padT, padB) {
+      var availW = vbW - padL - padR;
+      var availH = vbH - padT - padB;
+      var spanX = worldMaxX - worldMinX;
+      var spanY = worldMaxY - worldMinY;
+      var pxPerUnit = Math.min(availW / spanX, availH / spanY);
+      var plotW = spanX * pxPerUnit;
+      var plotH = spanY * pxPerUnit;
+      var originLeft = padL + (availW - plotW) / 2;
+      var originBottom = padT + (availH + plotH) / 2;
+
+      return {
+        pxPerUnit: pxPerUnit,
+        plotLeft: originLeft,
+        plotRight: originLeft + plotW,
+        plotTop: originBottom - plotH,
+        plotBottom: originBottom,
+        toX: function (wx) { return originLeft + (wx - worldMinX) * pxPerUnit; },
+        toY: function (wy) { return originBottom - (wy - worldMinY) * pxPerUnit; },
+        toR: function (wr) { return wr * pxPerUnit; },
+        toWorld: function (px, py) {
+          return {
+            x: worldMinX + (px - originLeft) / pxPerUnit,
+            y: worldMinY + (originBottom - py) / pxPerUnit
+          };
+        }
+      };
+    }
+
+    function drawCartesianGrid(svg, map, minX, maxX, minY, maxY, clipId) {
+      var g = createSvgEl(`g`, clipId ? { 'clip-path': `url(#` + clipId + `)` } : {});
+      for (var gx = Math.ceil(minX); gx <= Math.floor(maxX); gx++) {
+        var px = map.toX(gx);
+        g.appendChild(createSvgEl(`line`, {
+          x1: px, y1: map.plotTop, x2: px, y2: map.plotBottom,
+          class: gx === 0 ? `svg-axis` : `svg-gridline`
+        }));
+      }
+      for (var gy = Math.ceil(minY); gy <= Math.floor(maxY); gy++) {
+        var py = map.toY(gy);
+        g.appendChild(createSvgEl(`line`, {
+          x1: map.plotLeft, y1: py, x2: map.plotRight, y2: py,
+          class: gy === 0 ? `svg-axis` : `svg-gridline`
+        }));
+      }
+      svg.appendChild(g);
+
+      // Axis ticks outside clip
+      var ticksG = createSvgEl(`g`);
+      for (var tx = Math.ceil(minX); tx <= Math.floor(maxX); tx++) {
+        if (tx < 0) continue;
+        var tpx = map.toX(tx);
+        var txt = createSvgEl(`text`, {
+          x: tpx, y: map.plotBottom + 16,
+          'text-anchor': `middle`, class: `svg-tick`
+        });
+        txt.textContent = String(tx);
+        ticksG.appendChild(txt);
+      }
+      for (var ty = Math.ceil(minY); ty <= Math.floor(maxY); ty++) {
+        if (ty < 0) continue;
+        var tpy = map.toY(ty);
+        var txtY = createSvgEl(`text`, {
+          x: map.plotLeft - 8, y: tpy + 4,
+          'text-anchor': `end`, class: `svg-tick`
+        });
+        txtY.textContent = String(ty);
+        ticksG.appendChild(txtY);
+      }
+
+      var xLabel = createSvgEl(`text`, {
+        x: map.plotRight, y: map.plotBottom + 34,
+        'text-anchor': `end`, class: `svg-tick`
+      });
+      xLabel.textContent = `Tema 1 (x₁)`;
+      ticksG.appendChild(xLabel);
+
+      var yLabel = createSvgEl(`text`, {
+        x: map.plotLeft, y: map.plotTop - 8,
+        'text-anchor': `start`, class: `svg-tick`
+      });
+      yLabel.textContent = `Tema 2 (x₂)`;
+      ticksG.appendChild(yLabel);
+
+      svg.appendChild(ticksG);
+    }
+
+    // =========================================================================
+    // SECTION 1: CONDORCET DUEL & PNL OPTIMUM RENDERING
+    // =========================================================================
+    function renderCondorcetSection() {
+      var svg = document.getElementById(`condorcet-svg`);
+      if (!svg) return;
+      svg.innerHTML = ``;
+
+      var voters = DEFAULT_VOTERS;
+      var map = makeMapper(600, 540, -0.8, 8.2, -0.8, 8.2, 46, 20, 24, 44);
+
+      var defs = createSvgEl(`defs`);
+      var clipPlot = createSvgEl(`clipPath`, { id: `clip-condorcet-plot` });
+      clipPlot.appendChild(createSvgEl(`rect`, {
+        x: map.plotLeft, y: map.plotTop,
+        width: map.plotRight - map.plotLeft,
+        height: map.plotBottom - map.plotTop
+      }));
+      defs.appendChild(clipPlot);
+      svg.appendChild(defs);
+
+      drawCartesianGrid(svg, map, -0.8, 8.2, -0.8, 8.2, `clip-condorcet-plot`);
+
+      var duel = state.duel;
+      var inc = REF_POLICIES.B;
+      var chal = REF_POLICIES.A;
+      var titleInc = `B`, titleChal = `A`;
+      var isOpt = duel === `OPT`;
+
+      if (duel === `AB`) { inc = REF_POLICIES.B; chal = REF_POLICIES.A; titleInc = `B`; titleChal = `A`; }
+      else if (duel === `BC`) { inc = REF_POLICIES.C; chal = REF_POLICIES.B; titleInc = `C`; titleChal = `B`; }
+      else if (duel === `CA`) { inc = REF_POLICIES.A; chal = REF_POLICIES.C; titleInc = `A`; titleChal = `C`; }
+      else {
+        inc = REF_POLICIES.A;
+        chal = computeGeometricMedian(voters);
+        titleInc = `A`;
+        titleChal = `x*`;
+      }
+
+      var plotG = createSvgEl(`g`, { 'clip-path': `url(#clip-condorcet-plot)` });
+
+      // Indifference circles through incumbent
+      for (var i = 0; i < voters.length; i++) {
+        var v = voters[i];
+        var rInc = dist(v, inc);
+        var rChal = dist(v, chal);
+        var approves = rChal < rInc - 1e-4;
+        plotG.appendChild(createSvgEl(`circle`, {
+          cx: map.toX(v.x),
+          cy: map.toY(v.y),
+          r: map.toR(rInc),
+          class: approves ? `svg-circle-v2` : `svg-circle-context`
+        }));
+      }
+
+      // Lines from each voter to challenger and incumbent
+      for (var j = 0; j < voters.length; j++) {
+        var vj = voters[j];
+        plotG.appendChild(createSvgEl(`line`, {
+          x1: map.toX(vj.x), y1: map.toY(vj.y),
+          x2: map.toX(inc.x), y2: map.toY(inc.y),
+          stroke: `var(--data-context)`, 'stroke-width': `1.3`, 'stroke-dasharray': `3 3`
+        }));
+        plotG.appendChild(createSvgEl(`line`, {
+          x1: map.toX(vj.x), y1: map.toY(vj.y),
+          x2: map.toX(chal.x), y2: map.toY(chal.y),
+          stroke: dist(vj, chal) < dist(vj, inc) ? `var(--data-3)` : `var(--data-1)`,
+          'stroke-width': `1.8`
+        }));
+      }
+
+      svg.appendChild(plotG);
+
+      // Reference policies A, B, C, x*
+      var xStar = computeGeometricMedian(voters);
+      var polKeys = [`A`, `B`, `C`];
+      for (var pk = 0; pk < polKeys.length; pk++) {
+        var key = polKeys[pk];
+        var pol = REF_POLICIES[key];
+        var isChallenger = (!isOpt && key === titleChal);
+        var isIncumbent = (key === titleInc);
+        var px = map.toX(pol.x);
+        var py = map.toY(pol.y);
+
+        svg.appendChild(createSvgEl(`circle`, {
+          cx: px, cy: py,
+          r: isChallenger ? 7 : 5.5,
+          fill: isChallenger ? `var(--data-1)` : (isIncumbent ? `var(--data-2)` : `var(--background)`),
+          stroke: isChallenger ? `var(--background)` : (isIncumbent ? `var(--background)` : `var(--on-surface-variant)`),
+          'stroke-width': `2`
+        }));
+        var pLbl = createSvgEl(`text`, {
+          x: px + 10, y: py - 8,
+          class: isChallenger ? `svg-label-story` : (isIncumbent ? `svg-label-compare` : `svg-label-mono`)
+        });
+        pLbl.textContent = `${key} (${pol.x},${pol.y})`;
+        svg.appendChild(pLbl);
+      }
+
+      // Draw x*
+      var sx = map.toX(xStar.x);
+      var sy = map.toY(xStar.y);
+      svg.appendChild(createSvgEl(`rect`, {
+        x: sx - 5, y: sy - 5, width: 10, height: 10,
+        transform: `rotate(45 ${sx} ${sy})`,
+        fill: isOpt ? `var(--data-3)` : `var(--background)`,
+        stroke: `var(--data-3)`,
+        'stroke-width': `2`
+      }));
+      var optLbl = createSvgEl(`text`, {
+        x: sx + 10, y: sy + 14,
+        class: `svg-label-good`
+      });
+      optLbl.textContent = `x* (${fmt(xStar.x, 2)}; ${fmt(xStar.y, 2)})`;
+      svg.appendChild(optLbl);
+
+      // Draw voters 1, 2, 3
+      for (var vi = 0; vi < voters.length; vi++) {
+        var vt = voters[vi];
+        var vx = map.toX(vt.x);
+        var vy = map.toY(vt.y);
+        svg.appendChild(createSvgEl(`circle`, {
+          cx: vx, cy: vy, r: 6.5,
+          fill: `var(--primary)`, stroke: `var(--background)`, 'stroke-width': `2`
+        }));
+        var vLbl = createSvgEl(`text`, {
+          x: vx + (vt.id === 1 ? -8 : 10),
+          y: vy + (vt.id === 1 ? -11 : 4),
+          'text-anchor': vt.id === 1 ? `end` : `start`,
+          class: `svg-label-mono`
+        });
+        vLbl.textContent = `${vt.short} (${vt.x},${vt.y})`;
+        svg.appendChild(vLbl);
+      }
+
+      // Update Table & Narrative
+      var tbody = document.getElementById(`duel-tbody`);
+      var badge = document.getElementById(`duel-badge`);
+      var subEl = document.getElementById(`duel-sub`);
+      var expl = document.getElementById(`duel-explanation`);
+      var colInc = document.getElementById(`duel-col-inc`);
+      var colChal = document.getElementById(`duel-col-chal`);
+
+      if (colInc) colInc.textContent = `Dist. ${titleInc}`;
+      if (colChal) colChal.textContent = `Dist. ${titleChal}`;
+
+      var yesVotes = 0;
+      var rowsHtml = ``;
+      var diffs = [];
+      for (var r = 0; r < voters.length; r++) {
+        var vr = voters[r];
+        var dInc = dist(vr, inc);
+        var dChal = dist(vr, chal);
+        var gain = dInc - dChal; // positive = closer to challenger
+        diffs.push(gain);
+        var wins = gain > 1e-4;
+        if (wins) yesVotes++;
+        var signStr = gain >= 0 ? `+${fmt(gain, 2)}` : `−${fmt(Math.abs(gain), 2)}`;
+        rowsHtml += `<tr class="${wins ? `row-highlight` : ``}">
+          <td>${vr.name}</td>
+          <td class="num">${fmt(dInc, 2)}</td>
+          <td class="num">${fmt(dChal, 2)}</td>
+          <td class="num" style="color: ${wins ? `var(--positive)` : `var(--tertiary)`};">${signStr}</td>
+          <td><span class="tag ${wins ? `good` : `story`}">${wins ? titleChal : titleInc}</span></td>
+        </tr>`;
+      }
+      if (tbody) tbody.innerHTML = rowsHtml;
+
+      if (badge && subEl && expl) {
+        if (duel === `AB`) {
+          badge.className = `tag story`;
+          badge.textContent = `A vence B (2 a 1)`;
+          subEl.textContent = `Incumbente: B(5,1) · Desafiante: A(2,3)`;
+          expl.textContent = `Os votantes 1 e 3 ficam mais próximos de A do que de B (ganhos de +1,76 e +3,09). Apenas o votante 2 prefere B.`;
+        } else if (duel === `BC`) {
+          badge.className = `tag story`;
+          badge.textContent = `B vence C (2 a 1)`;
+          subEl.textContent = `Incumbente: C(4,6) · Desafiante: B(5,1)`;
+          expl.textContent = `Os votantes 1 e 2 preferem B a C (ganhos de +1,83 e +1,37). O votante 3 fica muito mais distante em B (perda de −4,05).`;
+        } else if (duel === `CA`) {
+          badge.className = `tag story`;
+          badge.textContent = `C vence A (2 a 1) — fecha o ciclo`;
+          subEl.textContent = `Incumbente: A(2,3) · Desafiante: C(4,6)`;
+          expl.textContent = `C derrota A por 2 a 1, embora V2 e V3 ganhem apenas +0,39 e +0,96, enquanto V1 sofre uma perda intensa de −3,59. A maioria ignora essa assimetria.`;
+        } else {
+          badge.className = `tag good`;
+          badge.textContent = `x* reduz Z para 10,25 (${yesVotes} a ${3 - yesVotes} vs. A)`;
+          subEl.textContent = `Referência: A(2,3) · Ótimo PNL: x*(2,67 ; 3,33)`;
+          expl.textContent = `O ponto de mediana geométrica x* minimiza a discordância total Z = 10,245 (menor que A = 10,36). Note que os votantes 2 e 3 ainda preferem x* a A.`;
+        }
+      }
+
+      // Render Z bar chart
+      renderZBarChart(xStar);
+    }
+
+    function renderZBarChart(xStar) {
+      var svg = document.getElementById(`z-bar-svg`);
+      if (!svg) return;
+      svg.innerHTML = ``;
+
+      var items = [
+        { label: `x* (Ótimo PNL)`, z: totalDiscordance(xStar, DEFAULT_VOTERS), cls: `good` },
+        { label: `A = (2, 3)`, z: totalDiscordance(REF_POLICIES.A, DEFAULT_VOTERS), cls: `story` },
+        { label: `C = (4, 6)`, z: totalDiscordance(REF_POLICIES.C, DEFAULT_VOTERS), cls: `ctx` },
+        { label: `B = (5, 1)`, z: totalDiscordance(REF_POLICIES.B, DEFAULT_VOTERS), cls: `ctx` }
+      ];
+
+      var padL = 112, padR = 54, padT = 16, padB = 26;
+      var w = 420 - padL - padR;
+      var rowH = 30;
+      var maxZ = 15;
+
+      // Gridlines
+      for (var t = 0; t <= 15; t += 5) {
+        var gx = padL + (t / maxZ) * w;
+        svg.appendChild(createSvgEl(`line`, {
+          x1: gx, y1: padT, x2: gx, y2: padT + items.length * rowH + 6,
+          class: t === 0 ? `svg-axis` : `svg-gridline`
+        }));
+        var tl = createSvgEl(`text`, {
+          x: gx, y: padT + items.length * rowH + 20,
+          'text-anchor': `middle`, class: `svg-tick`
+        });
+        tl.textContent = String(t);
+        svg.appendChild(tl);
+      }
+
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        var y = padT + i * rowH + 6;
+        var bw = (it.z / maxZ) * w;
+        var fill = it.cls === `good` ? `var(--data-3)` : (it.cls === `story` ? `var(--data-1)` : `var(--data-context)`);
+
+        var lbl = createSvgEl(`text`, {
+          x: padL - 8, y: y + 13,
+          'text-anchor': `end`, class: `svg-label-mono`
+        });
+        lbl.textContent = it.label;
+        svg.appendChild(lbl);
+
+        svg.appendChild(createSvgEl(`rect`, {
+          x: padL, y: y + 2, width: w, height: 14,
+          fill: `var(--surface-container-high)`
+        }));
+        svg.appendChild(createSvgEl(`rect`, {
+          x: padL, y: y + 2, width: bw, height: 14,
+          fill: fill
+        }));
+
+        var valLbl = createSvgEl(`text`, {
+          x: padL + bw + 6, y: y + 13,
+          class: it.cls === `good` ? `svg-label-good` : (it.cls === `story` ? `svg-label-story` : `svg-label-mono`)
+        });
+        valLbl.textContent = fmt(it.z, 2);
+        svg.appendChild(valLbl);
+      }
+    }
+
+    // =========================================================================
+    // SECTION 3: MCKELVEY ZIG-ZAG INTERACTIVE PLANE & EXPLANATORY CHARTS
+    // =========================================================================
+    function renderMcKelveyPlot() {
+      var svg = document.getElementById(`mckelvey-svg`);
+      if (!svg) return;
+      svg.innerHTML = ``;
+
+      var voters = state.voters;
+      var p0 = state.p0;
+      var setterIdx = state.setterIdx;
+      var pathObj = ensurePath();
+      var steps = pathObj.steps;
+      var k = Math.min(state.currentStep, steps.length - 1);
+      var curStep = steps[k];
+      var curPt = curStep.pt;
+      var nextStep = k < steps.length - 1 ? steps[k + 1] : null;
+
+      var showTarget = document.getElementById(`chk-target`) ? document.getElementById(`chk-target`).checked : true;
+      var showCircles = document.getElementById(`chk-circles`) ? document.getElementById(`chk-circles`).checked : true;
+      var showLenses = document.getElementById(`chk-lenses`) ? document.getElementById(`chk-lenses`).checked : true;
+      var showVectors = document.getElementById(`chk-vectors`) ? document.getElementById(`chk-vectors`).checked : true;
+      var showFullPath = document.getElementById(`chk-fullpath`) ? document.getElementById(`chk-fullpath`).checked : true;
+
+      var map = makeMapper(620, 580, -1.2, 8.8, -1.0, 9.0, 48, 22, 24, 46);
+      state._lastMap = map;
+
+      var defs = createSvgEl(`defs`);
+
+      // Clip rect for plot area
+      var clipPlot = createSvgEl(`clipPath`, { id: `clip-mk-plot` });
+      clipPlot.appendChild(createSvgEl(`rect`, {
+        x: map.plotLeft, y: map.plotTop,
+        width: map.plotRight - map.plotLeft,
+        height: map.plotBottom - map.plotTop
+      }));
+      defs.appendChild(clipPlot);
+
+      // Hatch pattern for Target T
+      var pat = createSvgEl(`pattern`, {
+        id: `hatch-T`, width: 8, height: 8,
+        patternUnits: `userSpaceOnUse`, patternTransform: `rotate(45)`
+      });
+      pat.appendChild(createSvgEl(`rect`, { x: 0, y: 0, width: 8, height: 8, class: `svg-target-fill` }));
+      pat.appendChild(createSvgEl(`line`, { x1: 0, y1: 0, x2: 0, y2: 8, class: `svg-target-hatch` }));
+      defs.appendChild(pat);
+
+      // Mask for Target Region T (everything outside the p0-circles of voters != setterIdx)
+      var maskT = createSvgEl(`mask`, { id: `mask-target-T` });
+      maskT.appendChild(createSvgEl(`rect`, {
+        x: map.plotLeft, y: map.plotTop,
+        width: map.plotRight - map.plotLeft,
+        height: map.plotBottom - map.plotTop,
+        fill: `white`
+      }));
+      for (var mi = 0; mi < 3; mi++) {
+        if (mi === setterIdx) continue;
+        maskT.appendChild(createSvgEl(`circle`, {
+          cx: map.toX(voters[mi].x),
+          cy: map.toY(voters[mi].y),
+          r: map.toR(dist(p0, voters[mi])),
+          fill: `black`
+        }));
+      }
+      defs.appendChild(maskT);
+
+      // Clip paths for current policy p_k circles (for exact pairwise majority lenses!)
+      for (var ci = 0; ci < 3; ci++) {
+        var cp = createSvgEl(`clipPath`, { id: `clip-pk-c${ci}` });
+        cp.appendChild(createSvgEl(`circle`, {
+          cx: map.toX(voters[ci].x),
+          cy: map.toY(voters[ci].y),
+          r: map.toR(dist(curPt, voters[ci]))
+        }));
+        defs.appendChild(cp);
+      }
+
+      // Arrowhead markers
+      var markerU = createSvgEl(`marker`, {
+        id: `arrow-u`, viewBox: `0 0 10 10`, refX: 8, refY: 5,
+        markerWidth: 6, markerHeight: 6, orient: `auto-start-reverse`
+      });
+      markerU.appendChild(createSvgEl(`path`, { d: `M 0 1.5 L 9 5 L 0 8.5 z`, fill: `var(--secondary)` }));
+      defs.appendChild(markerU);
+
+      var markerD = createSvgEl(`marker`, {
+        id: `arrow-d`, viewBox: `0 0 10 10`, refX: 8, refY: 5,
+        markerWidth: 6, markerHeight: 6, orient: `auto-start-reverse`
+      });
+      markerD.appendChild(createSvgEl(`path`, { d: `M 0 1.5 L 9 5 L 0 8.5 z`, fill: `var(--tertiary)` }));
+      defs.appendChild(markerD);
+
+      svg.appendChild(defs);
+
+      // Grid & axes
+      drawCartesianGrid(svg, map, -1.2, 8.8, -1.0, 9.0, `clip-mk-plot`);
+
+      var plotG = createSvgEl(`g`, { 'clip-path': `url(#clip-mk-plot)` });
+
+      // Layer 1: Target Region T
+      if (showTarget) {
+        plotG.appendChild(createSvgEl(`rect`, {
+          x: map.plotLeft, y: map.plotTop,
+          width: map.plotRight - map.plotLeft,
+          height: map.plotBottom - map.plotTop,
+          fill: `url(#hatch-T)`,
+          mask: `url(#mask-target-T)`
+        }));
+        // Boundary circles of p0 for non-setter voters
+        for (var ti = 0; ti < 3; ti++) {
+          if (ti === setterIdx) continue;
+          plotG.appendChild(createSvgEl(`circle`, {
+            cx: map.toX(voters[ti].x),
+            cy: map.toY(voters[ti].y),
+            r: map.toR(dist(p0, voters[ti])),
+            fill: `none`,
+            stroke: `var(--data-3)`,
+            'stroke-width': `1.3`,
+            'stroke-dasharray': `6 4`
+          }));
+        }
+        // Label T in top-right open area
+        var tLabel = createSvgEl(`text`, {
+          x: map.toX(7.5), y: map.toY(7.9),
+          'text-anchor': `middle`, class: `svg-label-good`
+        });
+        tLabel.textContent = `Região-Alvo T`;
+        plotG.appendChild(tLabel);
+      }
+
+      // Layer 2: Majority Lenses W(p_k) (exact pairwise intersections!)
+      if (showLenses) {
+        var pairs = [[0, 1], [1, 2], [0, 2]];
+        var activeCoalKey = nextStep && nextStep.coalition ? nextStep.coalition.join(`,`) : ``;
+        for (var pi = 0; pi < pairs.length; pi++) {
+          var a = pairs[pi][0], b = pairs[pi][1];
+          var isActive = (a + `,` + b) === activeCoalKey;
+          plotG.appendChild(createSvgEl(`circle`, {
+            cx: map.toX(voters[b].x),
+            cy: map.toY(voters[b].y),
+            r: map.toR(dist(curPt, voters[b])),
+            'clip-path': `url(#clip-pk-c${a})`,
+            class: isActive ? `svg-lens-active` : `svg-lens-inactive`
+          }));
+        }
+      }
+
+      // Layer 3: Current p_k indifference circles
+      if (showCircles) {
+        for (var cIdx = 0; cIdx < 3; cIdx++) {
+          plotG.appendChild(createSvgEl(`circle`, {
+            cx: map.toX(voters[cIdx].x),
+            cy: map.toY(voters[cIdx].y),
+            r: map.toR(dist(curPt, voters[cIdx])),
+            class: cIdx === setterIdx ? `svg-circle-v1` : `svg-circle-context`
+          }));
+        }
+      }
+
+      // Layer 4: Full future path & traveled zig-zag path
+      if (showFullPath && steps.length > 1) {
+        var futureD = `M ${map.toX(steps[0].pt.x)} ${map.toY(steps[0].pt.y)}`;
+        for (var fi = 1; fi < steps.length; fi++) {
+          futureD += ` L ${map.toX(steps[fi].pt.x)} ${map.toY(steps[fi].pt.y)}`;
+        }
+        plotG.appendChild(createSvgEl(`path`, { d: futureD, class: `svg-path-future` }));
+      }
+
+      if (k > 0) {
+        var pastD = `M ${map.toX(steps[0].pt.x)} ${map.toY(steps[0].pt.y)}`;
+        for (var ki = 1; ki <= k; ki++) {
+          pastD += ` L ${map.toX(steps[ki].pt.x)} ${map.toY(steps[ki].pt.y)}`;
+        }
+        plotG.appendChild(createSvgEl(`path`, { d: pastD, class: `svg-path-story` }));
+
+        for (var di = 1; di <= k; di++) {
+          var ptD = steps[di].pt;
+          plotG.appendChild(createSvgEl(`circle`, {
+            cx: map.toX(ptD.x), cy: map.toY(ptD.y),
+            r: di === k ? 5.5 : 3.5,
+            fill: di === k ? `var(--data-1)` : `var(--background)`,
+            stroke: `var(--data-1)`,
+            'stroke-width': `2`
+          }));
+          if (di === k || steps.length <= 10 || di % 2 === 0) {
+            var pTxt = createSvgEl(`text`, {
+              x: map.toX(ptD.x) + 7,
+              y: map.toY(ptD.y) + (di % 2 === 1 ? 12 : -7),
+              class: di === k ? `svg-label-story` : `svg-tick`
+            });
+            pTxt.textContent = `p${di}`;
+            plotG.appendChild(pTxt);
+          }
+        }
+      }
+
+      // Layer 5: Unit vectors & bisector for the upcoming step (curPt -> nextStep)
+      if (showVectors && nextStep && nextStep.ua && nextStep.up && nextStep.bisector) {
+        var vecScale = 1.15;
+        var cxPx = map.toX(curPt.x);
+        var cyPx = map.toY(curPt.y);
+        var uaEnd = add(curPt, scale(nextStep.ua, vecScale));
+        var upEnd = add(curPt, scale(nextStep.up, vecScale));
+        var dEnd = add(curPt, scale(nextStep.bisector, vecScale * 1.15));
+
+        plotG.appendChild(createSvgEl(`line`, {
+          x1: cxPx, y1: cyPx, x2: map.toX(uaEnd.x), y2: map.toY(uaEnd.y),
+          class: `svg-vector-u`, 'marker-end': `url(#arrow-u)`
+        }));
+        plotG.appendChild(createSvgEl(`line`, {
+          x1: cxPx, y1: cyPx, x2: map.toX(upEnd.x), y2: map.toY(upEnd.y),
+          class: `svg-vector-u`, 'marker-end': `url(#arrow-u)`
+        }));
+        plotG.appendChild(createSvgEl(`line`, {
+          x1: cxPx, y1: cyPx, x2: map.toX(dEnd.x), y2: map.toY(dEnd.y),
+          class: `svg-vector-d`, 'marker-end': `url(#arrow-d)`
+        }));
+
+        var dLbl = createSvgEl(`text`, {
+          x: map.toX(dEnd.x) + 8, y: map.toY(dEnd.y) + 4,
+          class: `svg-label-story`
+        });
+        dLbl.textContent = `d = uₐ+uₚ`;
+        plotG.appendChild(dLbl);
+      }
+
+      svg.appendChild(plotG);
+
+      // Layer 6: Draggable p0 and Voter nodes (drawn outside clip so labels stay crisp)
+      var p0x = map.toX(p0.x);
+      var p0y = map.toY(p0.y);
+      var p0Node = createSvgEl(`circle`, {
+        cx: p0x, cy: p0y, r: 7,
+        class: `svg-dot-p0`,
+        'data-drag': `p0`
+      });
+      svg.appendChild(p0Node);
+      var p0Lbl = createSvgEl(`text`, {
+        x: p0x - 10, y: p0y - 10,
+        'text-anchor': `end`, class: `svg-label-mono`
+      });
+      p0Lbl.textContent = `p₀ (${fmt(p0.x, 1)}; ${fmt(p0.y, 1)})`;
+      svg.appendChild(p0Lbl);
+
+      if (k === 0) {
+        svg.appendChild(createSvgEl(`circle`, {
+          cx: p0x, cy: p0y, r: 4,
+          class: `svg-dot-current`, 'pointer-events': `none`
+        }));
+      }
+
+      // Voters
+      for (var vi = 0; vi < 3; vi++) {
+        var vt = voters[vi];
+        var vx = map.toX(vt.x);
+        var vy = map.toY(vt.y);
+        var isSetter = vi === setterIdx;
+
+        svg.appendChild(createSvgEl(`circle`, {
+          cx: vx, cy: vy, r: isSetter ? 8.5 : 7,
+          class: `svg-dot-voter`,
+          stroke: isSetter ? `var(--data-1)` : `var(--primary)`,
+          'data-drag': `voter-${vi}`
+        }));
+
+        if (isSetter) {
+          svg.appendChild(createSvgEl(`circle`, {
+            cx: vx, cy: vy, r: 3.5,
+            fill: `var(--data-1)`, 'pointer-events': `none`
+          }));
+        }
+
+        var vTxt = createSvgEl(`text`, {
+          x: vx + (vt.x > 4.5 ? 11 : -10),
+          y: vy + (vt.y > 5 ? -10 : 14),
+          'text-anchor': vt.x > 4.5 ? `start` : `end`,
+          class: isSetter ? `svg-label-story` : `svg-label-mono`
+        });
+        vTxt.textContent = `${vt.short}${isSetter ? ` (Pautador)` : ``} (${fmt(vt.x, 1)}; ${fmt(vt.y, 1)})`;
+        svg.appendChild(vTxt);
+      }
+    }
+
+    function renderStepDetails() {
+      var pathObj = ensurePath();
+      var steps = pathObj.steps;
+      var k = Math.min(state.currentStep, steps.length - 1);
+      var cur = steps[k];
+      var prev = k > 0 ? steps[k - 1] : steps[0];
+      var p0Step = steps[0];
+      var voters = state.voters;
+      var setterIdx = state.setterIdx;
+
+      // Update header & subtitle
+      var sub = document.getElementById(`mckelvey-plot-sub`);
+      if (sub) {
+        var sv = voters[setterIdx];
+        sub.textContent = `Zigue-zague com m = ${state.mSteps} passos · Pautador: ${sv.name} em (${fmt(sv.x, 1)}; ${fmt(sv.y, 1)})`;
+      }
+
+      var targetBadge = document.getElementById(`target-status-badge`);
+      if (targetBadge) {
+        if (cur.inT) {
+          targetBadge.className = `tag good`;
+          targetBadge.textContent = `p${k} está DENTRO de T (derrota dos demais)`;
+        } else if (state.path.setterInT) {
+          targetBadge.className = `tag compare`;
+          targetBadge.textContent = `Alvo T acessível via zigue-zague`;
+        } else {
+          targetBadge.className = `tag story`;
+          targetBadge.textContent = `p₀ próximo do pautador · espiral de 3 coalizões`;
+        }
+      }
+
+      var heading = document.getElementById(`step-heading`);
+      if (heading) {
+        heading.textContent = `Passo ${k} de ${state.mSteps}: p${k} = (${fmt(cur.pt.x, 2)} ; ${fmt(cur.pt.y, 2)})`;
+      }
+
+      var coalTag = document.getElementById(`step-coalition-tag`);
+      if (coalTag) {
+        if (k === 0) {
+          coalTag.className = `tag`;
+          coalTag.textContent = `Política inicial`;
+        } else {
+          var cLabels = cur.coalition.map(function (idx) { return idx + 1; }).join(`, `);
+          coalTag.className = cur.inT ? `tag good` : `tag story`;
+          coalTag.textContent = `Coalizão {${cLabels}} vence (2 a 1)`;
+        }
+      }
+
+      var narrative = document.getElementById(`step-narrative`);
+      if (narrative) {
+        if (k === 0) {
+          var nextCoal = steps[1] && steps[1].coalition ? steps[1].coalition.map(function (idx) { return idx + 1; }).join(`, `) : `1, 2`;
+          narrative.className = `vote-narrative compare-accent`;
+          narrative.textContent = `Ponto de partida em p₀ = (${fmt(cur.pt.x, 2)}; ${fmt(cur.pt.y, 2)}). No primeiro duelo, a coalizão {${nextCoal}} aprovará um deslocamento para dentro da lente destacada em laranja.`;
+        } else if (cur.inT) {
+          narrative.className = `vote-narrative good-accent`;
+          narrative.textContent = `Em p${k}, a política atingiu a região T! Todos os votantes além do pautador estão estritamente mais distantes do que estavam em p₀ — e, ainda assim, p${k} venceu p${k - 1} por maioria 2 a 1.`;
+        } else {
+          var winNames = cur.coalition.map(function (idx) { return `V` + (idx + 1); }).join(` e `);
+          var loseName = `V` + (cur.loserIdx + 1);
+          narrative.className = `vote-narrative`;
+          narrative.textContent = `Na transição p${k - 1} → p${k}, ${winNames} ficam mais próximos de suas posições ideais e aprovam p${k} (2 a 1). ${loseName} perde neste passo, mas integrará a coalizão vencedora seguinte.`;
+        }
+      }
+
+      // Table rows
+      var tbody = document.getElementById(`step-tbody`);
+      if (tbody) {
+        var html = ``;
+        for (var i = 0; i < 3; i++) {
+          var dPrev = prev.dists[i];
+          var dCur = cur.dists[i];
+          var dInit = p0Step.dists[i];
+          var deltaStep = dCur - dPrev;
+          var deltaInit = dCur - dInit;
+          var approved = k > 0 && deltaStep < -1e-5;
+          var isSetter = i === setterIdx;
+
+          var stepStr = k === 0 ? `0,00` : (deltaStep >= 0 ? `+${fmt(deltaStep, 2)}` : `−${fmt(Math.abs(deltaStep), 2)}`);
+          var initStr = k === 0 ? `0,00` : (deltaInit >= 0 ? `+${fmt(deltaInit, 2)}` : `−${fmt(Math.abs(deltaInit), 2)}`);
+
+          html += `<tr class="${isSetter ? `row-highlight` : ``}">
+            <td>${voters[i].short}${isSetter ? ` (Paut.)` : ``}</td>
+            <td class="num">${fmt(dPrev, 2)}</td>
+            <td class="num">${fmt(dCur, 2)}</td>
+            <td class="num" style="color: ${deltaStep < -1e-5 ? `var(--positive)` : (deltaStep > 1e-5 ? `var(--tertiary)` : `var(--on-surface-variant)`)};">${stepStr}</td>
+            <td class="num" style="color: ${deltaInit < -1e-5 ? `var(--positive)` : (deltaInit > 1e-5 ? `var(--tertiary)` : `var(--on-surface-variant)`)};">${initStr}</td>
+            <td>${k === 0 ? `<span class="tag">—</span>` : `<span class="tag ${approved ? `good` : `story`}">${approved ? `Aprova` : `Rejeita`}</span>`}</td>
+          </tr>`;
+        }
+        tbody.innerHTML = html;
+      }
+
+      // Step timeline pills
+      var pillsWrap = document.getElementById(`step-pills`);
+      if (pillsWrap) {
+        var pHtml = ``;
+        for (var pi = 0; pi < steps.length; pi++) {
+          var st = steps[pi];
+          var cTxt = st.coalition ? `{${st.coalition.map(function (x) { return x + 1; }).join(`,`)}}` : `p₀`;
+          pHtml += `<button type="button" class="step-pill ${pi === k ? `active` : ``} ${st.inT ? `in-t` : ``}" onclick="jumpToStep(${pi})" title="Passo ${pi}: ${cTxt}">p${pi}</button>`;
+        }
+        pillsWrap.innerHTML = pHtml;
+      }
+
+      // Update playback buttons & scrubber
+      var scrub = document.getElementById(`step-scrubber`);
+      var scrubLbl = document.getElementById(`scrubber-label`);
+      if (scrub) {
+        scrub.max = String(state.mSteps);
+        scrub.value = String(k);
+      }
+      if (scrubLbl) scrubLbl.textContent = `Passo ${k} / ${state.mSteps}`;
+
+      var btnPrev = document.getElementById(`btn-prev`);
+      var btnNext = document.getElementById(`btn-next`);
+      if (btnPrev) btnPrev.disabled = k <= 0;
+      if (btnNext) btnNext.disabled = k >= state.mSteps;
+    }
+
+    function renderDistanceLineChart() {
+      var svg = document.getElementById(`dist-line-svg`);
+      if (!svg) return;
+      svg.innerHTML = ``;
+
+      var steps = ensurePath().steps;
+      var m = steps.length - 1;
+      var kCur = Math.min(state.currentStep, m);
+      var setterIdx = state.setterIdx;
+      var voters = state.voters;
+
+      var maxD = 1;
+      for (var s = 0; s < steps.length; s++) {
+        for (var v = 0; v < 3; v++) {
+          if (steps[s].dists[v] > maxD) maxD = steps[s].dists[v];
+        }
+      }
+      maxD = Math.ceil(maxD + 0.8);
+
+      var padL = 42, padR = 94, padT = 18, padB = 34;
+      var plotW = 540 - padL - padR;
+      var plotH = 270 - padT - padB;
+
+      function xOf(stepIdx) { return padL + (stepIdx / Math.max(1, m)) * plotW; }
+      function yOf(d) { return padT + plotH - (d / maxD) * plotH; }
+
+      // Horizontal gridlines
+      var yStep = maxD > 8 ? 2 : 1;
+      for (var yv = 0; yv <= maxD; yv += yStep) {
+        var py = yOf(yv);
+        svg.appendChild(createSvgEl(`line`, {
+          x1: padL, y1: py, x2: padL + plotW, y2: py,
+          class: yv === 0 ? `svg-axis` : `svg-gridline`
+        }));
+        var yl = createSvgEl(`text`, { x: padL - 7, y: py + 4, 'text-anchor': `end`, class: `svg-tick` });
+        yl.textContent = String(yv);
+        svg.appendChild(yl);
+      }
+
+      // X ticks
+      var xTickEvery = m > 12 ? 2 : 1;
+      for (var xv = 0; xv <= m; xv += xTickEvery) {
+        var px = xOf(xv);
+        var xl = createSvgEl(`text`, { x: px, y: padT + plotH + 18, 'text-anchor': `middle`, class: `svg-tick` });
+        xl.textContent = `p${xv}`;
+        svg.appendChild(xl);
+      }
+
+      // Baseline dashed p0 lines for non-setter voters
+      var others = [];
+      for (var oi = 0; oi < 3; oi++) { if (oi !== setterIdx) others.push(oi); }
+      var otherColors = [`var(--data-2)`, `var(--data-3)`];
+
+      for (var o = 0; o < others.length; o++) {
+        var idx = others[o];
+        var baseY = yOf(steps[0].dists[idx]);
+        svg.appendChild(createSvgEl(`line`, {
+          x1: padL, y1: baseY, x2: padL + plotW, y2: baseY,
+          stroke: otherColors[o], 'stroke-width': `1.2`, 'stroke-dasharray': `4 3`, 'stroke-opacity': `0.7`
+        }));
+      }
+
+      // Vertical cursor at current step k
+      var curX = xOf(kCur);
+      svg.appendChild(createSvgEl(`line`, {
+        x1: curX, y1: padT, x2: curX, y2: padT + plotH,
+        stroke: `var(--on-surface)`, 'stroke-width': `1`, 'stroke-dasharray': `2 2`
+      }));
+
+      // Series lines (full faint context + active up to kCur)
+      var endLabels = [];
+      for (var vi = 0; vi < 3; vi++) {
+        var isSetter = vi === setterIdx;
+        var col = isSetter ? `var(--data-1)` : (vi === others[0] ? `var(--data-2)` : `var(--data-3)`);
+
+        var fullD = `M ${xOf(0)} ${yOf(steps[0].dists[vi])}`;
+        for (var si = 1; si <= m; si++) {
+          fullD += ` L ${xOf(si)} ${yOf(steps[si].dists[vi])}`;
+        }
+        svg.appendChild(createSvgEl(`path`, {
+          d: fullD, fill: `none`, stroke: `var(--data-context)`, 'stroke-width': `1.3`
+        }));
+
+        if (kCur >= 0) {
+          var actD = `M ${xOf(0)} ${yOf(steps[0].dists[vi])}`;
+          for (var ai = 1; ai <= kCur; ai++) {
+            actD += ` L ${xOf(ai)} ${yOf(steps[ai].dists[vi])}`;
+          }
+          svg.appendChild(createSvgEl(`path`, {
+            d: actD, fill: `none`, stroke: col,
+            'stroke-width': isSetter ? `3` : `2.1`, 'stroke-linejoin': `round`
+          }));
+        }
+
+        var endPtY = yOf(steps[kCur].dists[vi]);
+        svg.appendChild(createSvgEl(`circle`, {
+          cx: curX, cy: endPtY, r: isSetter ? 4.5 : 3.5, fill: col
+        }));
+
+        endLabels.push({
+          y: yOf(steps[m].dists[vi]),
+          text: `${voters[vi].short}${isSetter ? `*` : ``}: ${fmt(steps[kCur].dists[vi], 2)}`,
+          cls: isSetter ? `svg-label-story` : (vi === others[0] ? `svg-label-compare` : `svg-label-good`)
+        });
+      }
+
+      // Avoid end-label collisions
+      endLabels.sort(function (a, b) { return a.y - b.y; });
+      for (var li = 1; li < endLabels.length; li++) {
+        if (endLabels[li].y - endLabels[li - 1].y < 14) {
+          endLabels[li].y = endLabels[li - 1].y + 14;
+        }
+      }
+      for (var lj = 0; lj < endLabels.length; lj++) {
+        var lbl = createSvgEl(`text`, {
+          x: padL + plotW + 8, y: endLabels[lj].y + 4,
+          class: endLabels[lj].cls
+        });
+        lbl.textContent = endLabels[lj].text;
+        svg.appendChild(lbl);
+      }
+    }
+
+    function renderDeltaBarChart() {
+      var svg = document.getElementById(`delta-bar-svg`);
+      if (!svg) return;
+      svg.innerHTML = ``;
+
+      var steps = ensurePath().steps;
+      var kCur = Math.min(state.currentStep, steps.length - 1);
+      var setterIdx = state.setterIdx;
+      var voters = state.voters;
+
+      var deltas = [];
+      var maxAbs = 2.5;
+      for (var i = 0; i < 3; i++) {
+        var dv = steps[kCur].dists[i] - steps[0].dists[i];
+        deltas.push(dv);
+        if (Math.abs(dv) > maxAbs) maxAbs = Math.abs(dv);
+      }
+      maxAbs = Math.ceil(maxAbs + 0.5);
+
+      var padL = 96, padR = 54, padT = 26, padB = 34;
+      var plotW = 540 - padL - padR;
+      var zeroX = padL + plotW / 2;
+      var rowH = 58;
+
+      function xOfDelta(val) {
+        return zeroX + (val / maxAbs) * (plotW / 2);
+      }
+
+      // Gridlines & Zero axis
+      var tickStep = maxAbs > 4 ? 2 : 1;
+      for (var t = -Math.floor(maxAbs); t <= Math.floor(maxAbs); t += tickStep) {
+        var tx = xOfDelta(t);
+        svg.appendChild(createSvgEl(`line`, {
+          x1: tx, y1: padT, x2: tx, y2: padT + 3 * rowH - 8,
+          class: t === 0 ? `svg-axis` : `svg-gridline`
+        }));
+        var tl = createSvgEl(`text`, {
+          x: tx, y: padT + 3 * rowH + 12,
+          'text-anchor': `middle`, class: `svg-tick`
+        });
+        tl.textContent = (t > 0 ? `+` : ``) + String(t);
+        svg.appendChild(tl);
+      }
+
+      var leftHdr = createSvgEl(`text`, {
+        x: zeroX - 8, y: padT - 8, 'text-anchor': `end`, class: `svg-label-good`
+      });
+      leftHdr.textContent = `← Ganho (mais perto que p₀)`;
+      svg.appendChild(leftHdr);
+
+      var rightHdr = createSvgEl(`text`, {
+        x: zeroX + 8, y: padT - 8, 'text-anchor': `start`, class: `svg-label-story`
+      });
+      rightHdr.textContent = `Perda (pior que p₀) →`;
+      svg.appendChild(rightHdr);
+
+      for (var r = 0; r < 3; r++) {
+        var val = deltas[r];
+        var y = padT + r * rowH + 10;
+        var isSetter = r === setterIdx;
+
+        var rowLbl = createSvgEl(`text`, {
+          x: padL - 10, y: y + 17, 'text-anchor': `end`,
+          class: isSetter ? `svg-label-story` : `svg-label-mono`
+        });
+        rowLbl.textContent = voters[r].name;
+        svg.appendChild(rowLbl);
+
+        var xVal = xOfDelta(val);
+        var bx = Math.min(zeroX, xVal);
+        var bw = Math.max(2, Math.abs(xVal - zeroX));
+        var barColor = val < -1e-4 ? `var(--data-3)` : (val > 1e-4 ? `var(--data-1)` : `var(--data-context)`);
+
+        svg.appendChild(createSvgEl(`rect`, {
+          x: padL, y: y + 4, width: plotW, height: 18,
+          fill: `var(--surface-container-high)`, opacity: `0.45`
+        }));
+        svg.appendChild(createSvgEl(`rect`, {
+          x: bx, y: y + 4, width: bw, height: 18,
+          fill: barColor
+        }));
+
+        var vStr = (val >= 0 ? `+` : `−`) + fmt(Math.abs(val), 2);
+        var vLbl = createSvgEl(`text`, {
+          x: val >= 0 ? xVal + 7 : xVal - 7,
+          y: y + 17,
+          'text-anchor': val >= 0 ? `start` : `end`,
+          class: val < -1e-4 ? `svg-label-good` : (val > 1e-4 ? `svg-label-story` : `svg-label-mono`)
+        });
+        vLbl.textContent = vStr;
+        svg.appendChild(vLbl);
+      }
+    }
+
+    function renderAll() {
+      ensurePath();
+      renderMcKelveyPlot();
+      renderStepDetails();
+      renderDistanceLineChart();
+      renderDeltaBarChart();
+    }
+
+    function recomputeAndRender() {
+      state.path = computeZigZagPath(state.voters, state.setterIdx, state.p0, state.mSteps);
+      if (state.currentStep > state.mSteps) state.currentStep = state.mSteps;
+      renderAll();
+    }
+
+    // =========================================================================
+    // INTERACTIVE CONTROLS (Hoisted function declarations)
+    // =========================================================================
+    function setDuel(duelKey) {
+      state.duel = duelKey;
+      var btns = [`AB`, `BC`, `CA`, `OPT`];
+      for (var i = 0; i < btns.length; i++) {
+        var b = document.getElementById(`duel-btn-` + btns[i].toLowerCase());
+        if (b) {
+          if (btns[i] === duelKey) b.classList.add(`btn-active`);
+          else b.classList.remove(`btn-active`);
+        }
+      }
+      renderCondorcetSection();
+    }
+
+    function stopPlayback() {
+      state.playing = false;
+      if (state.playTimer) {
+        clearInterval(state.playTimer);
+        state.playTimer = null;
+      }
+      var lbl = document.getElementById(`label-play`);
+      var ico = document.getElementById(`icon-play`);
+      if (lbl) lbl.textContent = `Reproduzir`;
+      if (ico) ico.innerHTML = `<path d="M4 3.2v9.6L12.5 8 4 3.2z"/>`;
+    }
+
+    function startPlayback() {
+      if (state.currentStep >= state.mSteps) {
+        state.currentStep = 0;
+        renderAll();
+      }
+      state.playing = true;
+      var lbl = document.getElementById(`label-play`);
+      var ico = document.getElementById(`icon-play`);
+      if (lbl) lbl.textContent = `Pausar`;
+      if (ico) ico.innerHTML = `<rect x="4" y="3.5" width="2.8" height="9"/><rect x="9.2" y="3.5" width="2.8" height="9"/>`;
+
+      if (state.playTimer) clearInterval(state.playTimer);
+      state.playTimer = setInterval(function () {
+        if (state.currentStep < state.mSteps) {
+          state.currentStep++;
+          renderAll();
+        } else {
+          stopPlayback();
+        }
+      }, state.playSpeedMs);
+    }
+
+    function togglePlay() {
+      if (state.playing) stopPlayback();
+      else startPlayback();
+    }
+
+    function stepNext() {
+      stopPlayback();
+      if (state.currentStep < state.mSteps) {
+        state.currentStep++;
+        renderAll();
+      }
+    }
+
+    function stepPrev() {
+      stopPlayback();
+      if (state.currentStep > 0) {
+        state.currentStep--;
+        renderAll();
+      }
+    }
+
+    function resetPlayback() {
+      stopPlayback();
+      state.currentStep = 0;
+      renderAll();
+    }
+
+    function jumpToStep(k) {
+      stopPlayback();
+      state.currentStep = Math.max(0, Math.min(state.mSteps, Number(k)));
+      renderAll();
+    }
+
+    function onScrubStep(val) {
+      stopPlayback();
+      state.currentStep = Number(val);
+      renderAll();
+    }
+
+    function onChangeSpeed(val) {
+      state.playSpeedMs = Number(val);
+      if (state.playing) {
+        stopPlayback();
+        startPlayback();
+      }
+    }
+
+    function onChangeSetter(val) {
+      stopPlayback();
+      state.setterIdx = Number(val);
+      state.currentStep = 0;
+      recomputeAndRender();
+    }
+
+    function onChangePresetP0(val) {
+      stopPlayback();
+      state.p0Preset = val;
+      if (REF_POLICIES[val]) {
+        state.p0 = { x: REF_POLICIES[val].x, y: REF_POLICIES[val].y };
+        state.currentStep = 0;
+        recomputeAndRender();
+      }
+    }
+
+    function onChangeStepsSlider(val) {
+      stopPlayback();
+      state.mSteps = Number(val);
+      var txt = document.getElementById(`val-steps-text`);
+      if (txt) txt.textContent = String(state.mSteps);
+      recomputeAndRender();
+    }
+
+    function restoreDefaultScenario() {
+      stopPlayback();
+      state.voters = DEFAULT_VOTERS.map(function (v) { return { id: v.id, name: v.name, short: v.short, x: v.x, y: v.y }; });
+      state.setterIdx = 1;
+      state.p0 = { x: 2, y: 3 };
+      state.p0Preset = `A`;
+      state.mSteps = 8;
+      state.currentStep = 0;
+
+      var selSetter = document.getElementById(`select-setter`);
+      var selP0 = document.getElementById(`select-p0`);
+      var sldSteps = document.getElementById(`slider-steps`);
+      var txtSteps = document.getElementById(`val-steps-text`);
+      if (selSetter) selSetter.value = `1`;
+      if (selP0) selP0.value = `A`;
+      if (sldSteps) sldSteps.value = `8`;
+      if (txtSteps) txtSteps.textContent = `8`;
+
+      recomputeAndRender();
+    }
+
+    // =========================================================================
+    // POINTER DRAG INTERACTION ON MCKELVEY SVG
+    // =========================================================================
+    function setupDragHandlers() {
+      var svg = document.getElementById(`mckelvey-svg`);
+      if (!svg) return;
+
+      function clientToWorld(clientX, clientY) {
+        var map = state._lastMap;
+        if (!map) return null;
+        var rect = svg.getBoundingClientRect();
+        var vbX = ((clientX - rect.left) / rect.width) * 620;
+        var vbY = ((clientY - rect.top) / rect.height) * 580;
+        var w = map.toWorld(vbX, vbY);
+        w.x = Math.max(-0.5, Math.min(8.2, Math.round(w.x * 10) / 10));
+        w.y = Math.max(-0.5, Math.min(8.5, Math.round(w.y * 10) / 10));
+        return w;
+      }
+
+      svg.addEventListener(`pointerdown`, function (e) {
+        var target = e.target;
+        if (!target || !target.getAttribute) return;
+        var dragAttr = target.getAttribute(`data-drag`);
+        if (!dragAttr) return;
+
+        stopPlayback();
+        if (dragAttr === `p0`) {
+          state.dragging = { type: `p0` };
+        } else if (dragAttr.indexOf(`voter-`) === 0) {
+          state.dragging = { type: `voter`, idx: Number(dragAttr.split(`-`)[1]) };
+        }
+        if (svg.setPointerCapture) {
+          try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      });
+
+      svg.addEventListener(`pointermove`, function (e) {
+        if (!state.dragging) return;
+        var w = clientToWorld(e.clientX, e.clientY);
+        if (!w) return;
+
+        if (state.dragging.type === `p0`) {
+          state.p0 = w;
+          state.p0Preset = `CUSTOM`;
+          var selP0 = document.getElementById(`select-p0`);
+          if (selP0) selP0.value = `CUSTOM`;
+        } else if (state.dragging.type === `voter`) {
+          state.voters[state.dragging.idx].x = w.x;
+          state.voters[state.dragging.idx].y = w.y;
+        }
+        recomputeAndRender();
+      });
+
+      function endDrag(e) {
+        if (!state.dragging) return;
+        state.dragging = null;
+        if (svg.releasePointerCapture) {
+          try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      }
+      svg.addEventListener(`pointerup`, endDrag);
+      svg.addEventListener(`pointercancel`, endDrag);
+    }
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+    document.addEventListener(`DOMContentLoaded`, function () {
+      renderCondorcetSection();
+      recomputeAndRender();
+      setupDragHandlers();
+
+      if (typeof renderMathInElement === `function`) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: `$$`, right: `$$`, display: true },
+            { left: `$`, right: `$`, display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>
