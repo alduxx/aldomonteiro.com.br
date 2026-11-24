@@ -599,7 +599,7 @@
               Na fórmula, $j$ indica o tema e $i$ indica o vizinho. O valor que o plano prevê para o tema é $x_j$, e o valor que aquele vizinho prefere para o mesmo tema é $a_{ij}$. Aqui, $v=3$ porque são três vizinhos, e $n=2$ porque são dois temas. Quando somamos as distâncias do plano $x$ até os três pontos ideais, obtemos $Z(x)$.
             </p>
             <div class="formula-box">
-              $$\min_x Z(x) = \sum_{i=1}^{v} \sqrt{\sum_{j=1}^{n} (x_j - a_{ij})^2}$$
+              $$\min Z(x) = \sum_{i=1}^{v} \sqrt{\sum_{j=1}^{n} (x_j - a_{ij})^2}$$
             </div>
             <p>
               Buscar o plano com a menor soma é um problema de <strong>programação não linear</strong>. A soma de distâncias varia de forma não linear com a posição do plano, embora os limites de cada tema sejam simples valores mínimos e máximos.
