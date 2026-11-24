@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teoria da escolha social</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.12);
+      --green: #16a34a;
+      --green-soft: rgba(22, 163, 74, 0.18);
+      --red: #dc2626;
+      --red-soft: rgba(220, 38, 38, 0.14);
+      --amber: #d97706;
+      --amber-soft: rgba(217, 119, 6, 0.15);
+      --purple: #7c3aed;
+      --v1: #2563eb;
+      --v2: #d97706;
+      --v3: #9333ea;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+      --radius: 12px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-alt: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #60a5fa;
+      --primary-soft: rgba(96, 165, 250, 0.16);
+      --green: #4ade80;
+      --green-soft: rgba(74, 222, 128, 0.22);
+      --red: #f87171;
+      --red-soft: rgba(248, 113, 113, 0.18);
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.18);
+      --purple: #c084fc;
+      --v1: #60a5fa;
+      --v2: #fbbf24;
+      --v3: #c084fc;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* Top Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: inline-block;
+    }
+    nav {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    nav a:hover {
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    /* Buttons & Controls */
+    button, .btn {
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 0.48rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    button:hover {
+      background: var(--surface-alt);
+      border-color: var(--primary);
+    }
+    button.active, button.primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    button.primary:hover { filter: brightness(1.08); }
+    button.success {
+      background: var(--green);
+      color: #ffffff;
+      border-color: var(--green);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Layout */
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 4rem;
+    }
+    .work-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1.5rem;
+      margin-bottom: 1rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-inline-start: 3px solid var(--primary);
+      border-radius: var(--radius);
+    }
+    .work-info p { margin: 0; }
+    .work-info-course {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .work-info-school {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .work-info-person {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin: 0;
+    }
+    .work-info-person dt {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+    .work-info-person dd {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .hero {
+      margin-bottom: 2.5rem;
+      padding: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.5rem, 3vw, 2.15rem);
+      line-height: 1.25;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--text-muted);
+    }
+    .hero p + p { margin-top: 0.75rem; }
+
+    section.chapter {
+      margin-bottom: 3rem;
+      scroll-margin-top: 76px;
+    }
+    .chapter-header {
+      margin-bottom: 1rem;
+    }
+    .chapter-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(360px, 1.15fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .split { grid-template-columns: minmax(0, 1fr); }
+      .viz-card { position: static !important; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow);
+    }
+    .viz-card {
+      position: sticky;
+      top: 76px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 0.88;
+      background: var(--surface-alt);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      user-select: none;
+    }
+    .canvas-wrap canvas,
+    .canvas-wrap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.85rem;
+    }
+
+    .callout {
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+      background: var(--primary-soft);
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+    .callout.warn {
+      border-left-color: var(--amber);
+      background: var(--amber-soft);
+    }
+    .callout.success {
+      border-left-color: var(--green);
+      background: var(--green-soft);
+    }
+    .callout.danger {
+      border-left-color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .formula-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin: 0.85rem 0;
+      overflow-x: auto;
+    }
+
+    .term-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0.75rem 0;
+    }
+    .term-chip {
+      font-size: 0.82rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .term-chip:hover, .term-chip.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0.85rem 0;
+    }
+    th, td {
+      padding: 0.5rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    tr.highlight-row {
+      background: var(--green-soft);
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge.v1 { background: rgba(37,99,235,0.16); color: var(--v1); }
+    .badge.v2 { background: rgba(217,119,6,0.18); color: var(--v2); }
+    .badge.v3 { background: rgba(147,51,234,0.16); color: var(--v3); }
+    .badge.win { background: var(--green-soft); color: var(--green); }
+    .badge.lose { background: var(--red-soft); color: var(--red); }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.86rem;
+      margin: 0.45rem 0;
+    }
+    .slider-group input[type="range"] {
+      flex: 1;
+      min-width: 0;
+      accent-color: var(--primary);
+    }
+
+    .step-tabs {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .step-tab {
+      font-size: 0.82rem;
+      padding: 0.4rem 0.7rem;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+    }
+    .legend > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .legend > span[hidden] { display: none; }
+    .swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .log-box {
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 0.75rem;
+    }
+
+    .draggable { cursor: grab; }
+    .draggable:active { cursor: grabbing; }
+    .small-muted { font-size: 0.84rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="brand"><span class="brand-dot"></span> Teoria da escolha social</div>
+      <nav>
+        <a href="#sec1">O ciclo</a>
+        <a href="#sec2">Quanto pesa cada preferência?</a>
+        <a href="#sec3">A ordem das votações</a>
+        <a href="#sec4">Teste a ordem</a>
+      </nav>
+      <button id="themeToggle" title="Alternar tema">Tema claro</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="work-info" aria-label="Identificação do trabalho">
+      <div>
+        <p class="work-info-course">Fundamentos de Pesquisa Operacional</p>
+        <p class="work-info-school">Universidade de Brasília - Instituto de Ciências Exatas - PPCA</p>
+      </div>
+      <dl class="work-info-person">
+        <div>
+          <dt>Aluno</dt>
+          <dd>Aldo Monteiro Barboza</dd>
+        </div>
+        <div>
+          <dt>Matrícula</dt>
+          <dd>262105072</dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="hero">
+      <h1>Quando a ordem das votações muda o resultado</h1>
+      <p>
+        Imagine que três vizinhos precisam decidir quanto investir na praça do bairro e na iluminação das ruas. Um prefere gastar pouco nos dois. Outro dá prioridade à praça,
+        e o terceiro, à iluminação. Eles comparam três planos, A, B e C, dois a dois. A vence B. B vence C. Parece que A seria o favorito, mas quando enfrenta C, A perde.
+         Cada votação termina em 2 a 1, com uma dupla diferente apoiando o vencedor.
+      </p>
+      <p>
+        Para escolher um plano, os vizinhos fazem duas votações. Na primeira, comparam dois dos três planos. Na segunda, votam entre o vencedor da primeira e o plano que ficou de fora.
+        Se votarem primeiro entre A e B, A ganha. Na segunda votação, C vence A e o bairro fica com C. Se votarem primeiro entre B e C, B ganha. Na segunda votação, A vence B e o bairro fica com A.
+      </p>
+      <p>
+        Imagine agora que o bairro já tenha adotado o plano A. Se o vizinho que dá prioridade à praça puder escolher quais mudanças vão a voto e em que ordem, ele pode buscar o apoio de um vizinho numa rodada e do outro na seguinte. Com o próprio voto e mais um, ele consegue aprovar cada mudança. No fim, o bairro pode acabar investindo mais na praça, como ele queria, mesmo que os outros dois prefiram o plano A ao resultado final.
+      </p>
+    </div>
+
+    <!-- ==================== SEÇÃO 1 ==================== -->
+    <section id="sec1" class="chapter">
+      <div class="chapter-header">
+        <h2>Três propostas, três maiorias</h2>
+      </div>
+      <div class="split">
+        <div class="card">
+          <p>
+            Na votação entre A e B, quem prefere gastar pouco e quem prioriza a iluminação votam em A. Quando as opções são B e C, o vizinho que prefere gastar pouco vota em B junto com quem prioriza a praça. Já C ganha de A com os votos de quem prioriza a praça e de quem prioriza a iluminação.
+          </p>
+          <p>
+            Cada plano ganha de um e perde para o outro. Esse ciclo é o <strong>paradoxo de Condorcet</strong>.
+          </p>
+          <p>
+            Para entender de onde vêm os votos, imagine um mapa. Da esquerda para a direita, aumenta o investimento na praça. De baixo para cima, aumenta o investimento na iluminação. Cada plano é um ponto, assim como a combinação ideal de cada vizinho, identificado como V1, V2 ou V3.
+          </p>
+          <p>
+            Em cada rodada, o vizinho vota no plano mais perto do seu ponto ideal. A distância é medida em linha reta, como com uma régua. É essa a ideia da <strong>teoria espacial do voto</strong> neste exemplo.
+          </p>
+          <p class="small-muted">Escolha um par de planos para ver os votos. As linhas verdes ligam cada vizinho ao plano que ele prefere.</p>
+
+          <div class="controls-row">
+            <button class="duel-btn active" data-duel="AB">A contra B</button>
+            <button class="duel-btn" data-duel="BC">B contra C</button>
+            <button class="duel-btn" data-duel="CA">C contra A</button>
+            <button class="duel-btn" data-duel="CYCLE">Ver o ciclo completo</button>
+          </div>
+
+          <div id="duelSummary" class="callout" style="margin-top:1rem;"></div>
+          <div id="duelTableWrap"></div>
+        </div>
+
+        <div class="viz-card">
+          <div class="canvas-wrap">
+            <svg id="svgSec1" viewBox="0 0 560 490"></svg>
+          </div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--v1)"></i> Ideal de V1</span>
+            <span><i class="swatch" style="background:var(--v2)"></i> Ideal de V2</span>
+            <span><i class="swatch" style="background:var(--v3)"></i> Ideal de V3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SEÇÃO 2 ==================== -->
+    <section id="sec2" class="chapter">
+      <div class="chapter-header">
+        <h2>Quanto pesa cada preferência?</h2>
+      </div>
+      <div class="split">
+        <div class="card">
+          <p>
+            Para quem prioriza a praça (V2) e para quem prioriza a iluminação (V3), C é só um pouco melhor que A. Já para quem prefere gastar pouco (V1), C é bem pior que A. Como cada vizinho tem um voto, C ganha por 2 a 1.
+          </p>
+          <p>
+            Comece pelo plano A. No mapa, meça em linha reta a distância de A até o ponto ideal de cada vizinho e some as três medidas. Faça a mesma conta para B e C. O plano com a menor soma fica em primeiro. Se dois planos tiverem o mesmo total, empatam.
+          </p>
+
+          <div class="callout warn">
+            <strong>Por que A fica à frente de C?</strong> Nas posições iniciais do mapa, trocar A por C aproxima V2 do seu ideal em 0,39 unidade, e V3, em 0,96. Já V1 se afasta em 3,59. A perda de V1 é maior que os dois ganhos somados, por isso A tem a menor soma entre os dois planos.
+          </div>
+
+          <p>
+            Na tabela, compare A, B e C. O ponto verde mostra onde fica a menor soma encontrada quando podemos montar um plano novo. Somar distâncias é uma escolha. Se a prioridade fosse proteger quem fica mais longe do próprio ideal, poderíamos escolher o plano que reduz a maior distância individual.
+          </p>
+
+          <p class="small-muted" style="margin-bottom:0.3rem;">Passe o mouse pelos rótulos para localizar esses elementos no mapa.</p>
+          <div class="term-chips" id="sec2Chips">
+            <span class="term-chip" data-hl="x">Plano em teste</span>
+            <span class="term-chip" data-hl="a">Pontos ideais</span>
+            <span class="term-chip" data-hl="d">Distâncias</span>
+            <span class="term-chip" data-hl="bounds">Limites, quando ligados</span>
+          </div>
+
+          <table>
+            <thead>
+              <tr><th>Plano</th><th>Posição no mapa</th><th>Soma das distâncias</th></tr>
+            </thead>
+            <tbody id="sec2TableBody"></tbody>
+          </table>
+
+          <div class="controls-row">
+            <button id="btnGoOpt" class="primary">Testar o ponto verde</button>
+            <button id="btnSetA">Testar A</button>
+            <button id="btnSetB">Testar B</button>
+            <button id="btnSetC">Testar C</button>
+            <button id="btnResetSec2">Voltar ao exemplo</button>
+          </div>
+
+          <div style="margin-top:1rem; padding-top:0.85rem; border-top:1px solid var(--border);">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-weight:600; font-size:0.9rem; cursor:pointer;">
+              <input type="checkbox" id="toggleBounds" />
+              Limitar a faixa de investimento em cada tema
+            </label>
+            <div id="boundsControls" style="display:none; margin-top:0.6rem;">
+              <div class="slider-group">
+                <label for="slL1">Praça, mínimo <strong id="valL1">0,5</strong></label>
+                <input type="range" id="slL1" min="0" max="3.5" step="0.1" value="0.5" />
+                <label for="slU1">Máximo <strong id="valU1">6,5</strong></label>
+                <input type="range" id="slU1" aria-label="Investimento máximo na praça" min="3.6" max="8" step="0.1" value="6.5" />
+              </div>
+              <div class="slider-group">
+                <label for="slL2">Iluminação, mínimo <strong id="valL2">0,5</strong></label>
+                <input type="range" id="slL2" min="0" max="3.5" step="0.1" value="0.5" />
+                <label for="slU2">Máximo <strong id="valU2">7,5</strong></label>
+                <input type="range" id="slU2" aria-label="Investimento máximo na iluminação" min="3.6" max="8" step="0.1" value="7.5" />
+              </div>
+              <div id="boundsStatus" class="small-muted"></div>
+            </div>
+          </div>
+
+          <section>
+            <h3>Problema de Programação Não Linear</h3>
+            <p>
+              O exemplo já traz o plano A no ponto <strong>(2, 3)</strong>. Para encontrá-lo no mapa, procure o 2 no eixo horizontal, que representa o investimento na praça. A partir daí, suba até a altura do 3 no eixo vertical, que representa o investimento na iluminação. Esses dois números são as <strong>coordenadas</strong> de A. O mapa que usa os dois eixos para localizar os pontos é um <strong>plano cartesiano</strong>.
+            </p>
+            <p>
+              Os eixos usam uma escala fictícia. Quanto maior o número, maior o investimento. V1, o vizinho que prefere gastar pouco, escolheria o nível 1 nos dois temas, então seu ponto ideal é <strong>(1, 1)</strong>. Os valores escritos junto às linhas, como 2,24 na linha de V1, mostram as distâncias do plano em teste até os pontos ideais dos vizinhos.
+            </p>
+            <p>
+              Entre o plano A e o ideal de V1, a diferença é de 1 nível na praça e de 2 na iluminação. Para medir a distância em linha reta, multiplique cada diferença por ela mesma. Some os resultados (1 e 4) e tire a raiz quadrada de 5. Dá cerca de 2,24. Essa é a <strong>distância euclidiana</strong> entre o plano A e o ponto ideal de V1.
+            </p>
+            <p>
+              Na fórmula, $j$ indica o tema e $i$ indica o vizinho. O valor que o plano prevê para o tema é $x_j$, e o valor que aquele vizinho prefere para o mesmo tema é $a_{ij}$. Aqui, $v=3$ porque são três vizinhos, e $n=2$ porque são dois temas. Quando somamos as distâncias do plano $x$ até os três pontos ideais, obtemos $Z(x)$.
+            </p>
+            <div class="formula-box">
+              $$\min_x Z(x) = \sum_{i=1}^{v} \sqrt{\sum_{j=1}^{n} (x_j - a_{ij})^2}$$
+            </div>
+            <p>
+              Buscar o plano com a menor soma é um problema de <strong>programação não linear</strong>. A soma de distâncias varia de forma não linear com a posição do plano, embora os limites de cada tema sejam simples valores mínimos e máximos.
+            </p>
+          </section>
+        </div>
+
+        <div class="viz-card">
+          <div class="canvas-wrap">
+            <canvas id="canvasHeatmap" width="560" height="490"></canvas>
+            <svg id="svgSec2" viewBox="0 0 560 490"></svg>
+          </div>
+          <div id="sec2LiveReadout" class="callout" style="margin:0.75rem 0 0;"></div>
+          <div class="legend">
+            <span>Arraste o plano em teste ou o ponto ideal de um vizinho.</span>
+            <span><i class="swatch" style="background:var(--green)"></i> Menor soma encontrada</span>
+            <span><i class="swatch" style="background:var(--red)"></i> Plano em teste</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SEÇÃO 3 ==================== -->
+    <section id="sec3" class="chapter">
+      <div class="chapter-header">
+        <h2>Como a ordem favorece quem propõe</h2>
+      </div>
+      <div class="split">
+        <div class="card">
+          <p>
+            O bairro já adotou o plano A. O vizinho que dá prioridade à praça (V2) escolhe quais mudanças entram em votação e em que ordem. Os três votam entre o plano que está valendo e a nova proposta. Se a proposta receber pelo menos dois votos, ela passa a valer e será comparada com a próxima.
+          </p>
+          <p>
+            Na primeira rodada da simulação, V2 propõe aumentar o investimento na praça e reduzir o da iluminação. Para V1, que prefere gastar pouco, essa combinação é melhor que o plano A. Ele vota com V2 e a proposta passa. Na rodada seguinte, V2 propõe aumentar o investimento na iluminação em relação ao plano recém-aprovado. Dessa vez, quem vota com ele é V3, o vizinho que dá prioridade à iluminação.
+          </p>
+          <p>
+            Ao alternar esses apoios, V2 pode chegar a um plano mais próximo do que ele queria. V1 e V3 podem preferir voltar ao plano A, mesmo tendo ajudado a aprovar algumas das mudanças pelo caminho. Escolher a ordem das votações para conduzir o grupo a esse resultado é uma forma de <strong>manipulação de agenda</strong>.
+          </p>
+
+          <div class="step-tabs" id="stepTabs">
+            <button class="step-tab active" data-step="1">1. O alvo</button>
+            <button class="step-tab" data-step="2">2. Um voto</button>
+            <button class="step-tab" data-step="3">3. Dois votos</button>
+            <button class="step-tab" data-step="4">4. Zigue-zague</button>
+            <button class="step-tab" data-step="5">5. Antes e depois</button>
+          </div>
+
+          <div id="stepContent"></div>
+
+          <div class="controls-row" style="margin-top:1rem; justify-content:space-between;">
+            <button id="btnPrevStep">← Anterior</button>
+            <button id="btnNextStep" class="primary">Próximo passo →</button>
+          </div>
+
+          <div class="controls-row" style="margin-bottom:0.85rem;">
+            <button id="btnToggle1D">E se houvesse um só tema?</button>
+          </div>
+
+          <div id="panel1D" class="callout warn" style="display:none;">
+            <p style="margin:0 0 0.5rem;">
+              Com um só tema, os três pontos ficam numa linha. O vizinho do meio, V2 neste desenho, sempre tem pelo menos um aliado para bloquear propostas que o afastem do seu ideal. Se um plano final deixasse os dois vizinhos dos extremos mais longe de seus ideais do que no início, também afastaria V2, que está entre eles. Assim, quem organiza a votação não consegue deixar os outros dois em situação pior ao mesmo tempo.
+            </p>
+            <svg id="svg1D" viewBox="0 0 460 88" style="width:100%; height:auto; background:var(--surface); border-radius:8px; border:1px solid var(--border);"></svg>
+          </div>
+
+          <details>
+            <summary>Ver a geometria e o resultado geral</summary>
+            <p>
+              Chamamos o plano inicial de $p_0$ e o ponto ideal de cada votante de $x_i$. A região em vermelho reúne os pontos $q$ mais distantes de V1 e V3 do que o plano inicial.
+            </p>
+            <div class="formula-box">
+              $$T = \{q : d(q,x_i) > d(p_0,x_i) \text{ para } i = 1,3\}$$
+            </div>
+            <p>
+              Se o plano atual está no ponto $z$, avançar uma fração $\varepsilon$ do caminho até $x_i$ deixa o votante com apenas a fração $1-\varepsilon$ da distância anterior.
+            </p>
+            <div class="formula-box">
+              $$z' = z + \varepsilon(x_i-z), \qquad d(z',x_i) = (1-\varepsilon)d(z,x_i), \qquad 0 < \varepsilon < 1$$
+            </div>
+            <p>
+              Para aproximar o plano de duas pessoas, some as duas setas de mesmo comprimento que apontam do plano atual até seus ideais. Se elas não apontam em sentidos exatamente opostos, um passo curto nessa direção encurta as duas distâncias. No mapa, o novo ponto cai na parte comum aos dois círculos.
+            </p>
+            <p>
+              O <strong>teorema de McKelvey</strong> vai além deste zigue-zague. Pense num mapa de dois ou mais temas em que o grupo pode propor qualquer ponto. Há pelo menos três votantes, e cada um prefere o ponto mais próximo do seu ideal. Se toda proposta puder ser derrotada por alguma outra, existe uma sequência de vitórias por maioria que leva de qualquer ponto de partida a qualquer destino. Em cada rodada, os votantes comparam apenas as duas propostas em disputa. <a href="https://www.sciencedirect.com/science/article/abs/pii/0022053176900405">Leia o artigo de McKelvey (1976)</a>.
+            </p>
+          </details>
+        </div>
+
+        <div class="viz-card">
+          <div class="canvas-wrap">
+            <svg id="svgSec3" viewBox="0 0 560 490"></svg>
+          </div>
+          <div id="sec3VizControls" class="controls-row"></div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--v2)"></i> V2 organiza a votação</span>
+            <span id="sec3SupportLegend" hidden><i class="swatch" style="background:var(--green)"></i><span></span></span>
+            <span id="sec3TargetLegend" hidden><i class="swatch" style="background:var(--red)"></i> Planos piores que A para V1 e V3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SEÇÃO 4 ==================== -->
+    <section id="sec4" class="chapter">
+      <div class="chapter-header">
+        <h2>Monte sua sequência de votações</h2>
+      </div>
+      <div class="split">
+        <div class="card">
+          <p>
+            Escolha quem vai organizar a votação. O grupo começa com o plano A. Clique numa área verde do mapa para propor uma mudança que pelo menos dois vizinhos preferem ao plano em vigor. A cada mudança aprovada, as áreas verdes são redesenhadas.
+          </p>
+          <p class="small-muted">
+            Tente chegar à área avermelhada, fora dos dois círculos tracejados. Ali, os outros dois vizinhos preferem o plano A ao que está em vigor.
+          </p>
+
+          <div class="controls-row">
+            <span class="small-muted" style="font-weight:600;">Quem organiza?</span>
+            <button class="agent-btn" data-agent="0">V1</button>
+            <button class="agent-btn active" data-agent="1">V2</button>
+            <button class="agent-btn" data-agent="2">V3</button>
+          </div>
+
+          <div class="controls-row">
+            <button id="btnLabUndo">Desfazer última mudança</button>
+            <button id="btnLabReset">Voltar ao plano A</button>
+          </div>
+
+          <div id="labStatus" class="callout" style="margin-top:0.85rem;"></div>
+
+          <p class="small-muted">Na tabela, os valores de V1, V2 e V3 mostram quanto o plano se aproximou do ideal de cada vizinho (−) ou se afastou dele (+) naquela rodada.</p>
+          <div class="log-box">
+            <table>
+              <thead>
+                <tr><th>Rodada</th><th>Posição no mapa</th><th>Votos a favor</th><th>V1</th><th>V2</th><th>V3</th></tr>
+              </thead>
+              <tbody id="labLogBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div class="canvas-wrap">
+            <svg id="svgSec4" viewBox="0 0 560 490" style="cursor:crosshair;"></svg>
+          </div>
+          <div class="legend">
+            <span><i class="swatch" style="background:var(--green)"></i> Mudanças que passam</span>
+            <span><i class="swatch" style="background:var(--red)"></i> Planos piores que A para os outros dois</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ==================== UTILIDADES MATEMÁTICAS E COORDENADAS ====================
+    const SVG_W = 560, SVG_H = 490;
+    const DOMAIN = { xMin: -0.5, xMax: 8.2, yMin: -0.5, yMax: 8.2 };
+
+    const toPxX = x => ((x - DOMAIN.xMin) / (DOMAIN.xMax - DOMAIN.xMin)) * SVG_W;
+    const toPxY = y => SVG_H - ((y - DOMAIN.yMin) / (DOMAIN.yMax - DOMAIN.yMin)) * SVG_H;
+    const toWorldX = px => DOMAIN.xMin + (px / SVG_W) * (DOMAIN.xMax - DOMAIN.xMin);
+    const toWorldY = py => DOMAIN.yMin + ((SVG_H - py) / SVG_H) * (DOMAIN.yMax - DOMAIN.yMin);
+    const scaleR = r => (r / (DOMAIN.xMax - DOMAIN.xMin)) * SVG_W; // aspect almost square; wait let's make exact square scale!
+
+    // Exact uniform scale so circles are true circles!
+    const UNIT = Math.min(SVG_W / 8.8, SVG_H / 8.2);
+    const OX = 42, OY = SVG_H - 36;
+    const wx = x => OX + x * UNIT;
+    const wy = y => OY - y * UNIT;
+    const pxToWx = px => (px - OX) / UNIT;
+    const pyToWy = py => (OY - py) / UNIT;
+    const wr = r => r * UNIT;
+
+    const dist = (p, q) => Math.hypot(p.x - q.x, p.y - q.y);
+    const fmt = (n, d = 2) => n.toFixed(d).replace('.', ',');
+
+    const DEFAULT_VOTERS = [
+      { id: 1, name: 'V1', x: 1, y: 1, color: 'var(--v1)' },
+      { id: 2, name: 'V2', x: 6, y: 3, color: 'var(--v2)' },
+      { id: 3, name: 'V3', x: 1, y: 7, color: 'var(--v3)' }
+    ];
+    const POLICIES = {
+      A: { name: 'A', x: 2, y: 3 },
+      B: { name: 'B', x: 5, y: 1 },
+      C: { name: 'C', x: 4, y: 6 }
+    };
+
+    function svgEl(tag, attrs = {}, text = null) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      if (text !== null) el.textContent = text;
+      return el;
+    }
+
+    function drawGrid(svg) {
+      const g = svgEl('g', { opacity: '0.45' });
+      for (let i = 0; i <= 8; i++) {
+        g.appendChild(svgEl('line', {
+          x1: wx(i), y1: wy(0), x2: wx(i), y2: wy(8),
+          stroke: 'var(--border)', 'stroke-width': i === 0 ? '1.6' : '1'
+        }));
+        g.appendChild(svgEl('line', {
+          x1: wx(0), y1: wy(i), x2: wx(8), y2: wy(i),
+          stroke: 'var(--border)', 'stroke-width': i === 0 ? '1.6' : '1'
+        }));
+        if (i > 0) {
+          g.appendChild(svgEl('text', {
+            x: wx(i), y: wy(0) + 16, 'text-anchor': 'middle',
+            fill: 'var(--text-muted)', 'font-size': '11'
+          }, String(i)));
+          g.appendChild(svgEl('text', {
+            x: wx(0) - 10, y: wy(i) + 4, 'text-anchor': 'end',
+            fill: 'var(--text-muted)', 'font-size': '11'
+          }, String(i)));
+        }
+      }
+      g.appendChild(svgEl('text', {
+        x: wx(8), y: wy(0) + 31, 'text-anchor': 'end', fill: 'var(--text-muted)', 'font-size': '11', 'font-weight': '600'
+      }, 'Praça'));
+      g.appendChild(svgEl('text', {
+        x: wx(0) - 30, y: 16, fill: 'var(--text-muted)', 'font-size': '11', 'font-weight': '600'
+      }, 'Iluminação'));
+      svg.appendChild(g);
+    }
+
+    function drawPoint(svg, p, opts = {}) {
+      const g = svgEl('g', opts.cls ? { class: opts.cls } : {});
+      if (opts.halo) {
+        g.appendChild(svgEl('circle', {
+          cx: wx(p.x), cy: wy(p.y), r: (opts.r || 7) + 6,
+          fill: opts.color || 'var(--primary)', opacity: '0.22'
+        }));
+      }
+      g.appendChild(svgEl('circle', {
+        cx: wx(p.x), cy: wy(p.y), r: opts.r || 7,
+        fill: opts.color || 'var(--primary)',
+        stroke: '#ffffff', 'stroke-width': '2'
+      }));
+      if (opts.label) {
+        g.appendChild(svgEl('text', {
+          x: wx(p.x) + (opts.dx ?? 10),
+          y: wy(p.y) + (opts.dy ?? -8),
+          fill: opts.textColor || 'var(--text)',
+          'font-size': opts.fontSize || '12',
+          'font-weight': '700'
+        }, opts.label));
+      }
+      svg.appendChild(g);
+      return g;
+    }
+
+    function drawArrow(svg, p1, p2, color, width = 2.4) {
+      const dx = wx(p2.x) - wx(p1.x);
+      const dy = wy(p2.y) - wy(p1.y);
+      const len = Math.hypot(dx, dy);
+      if (len < 2) return;
+      const ux = dx / len, uy = dy / len;
+      const endX = wx(p2.x), endY = wy(p2.y);
+      const g = svgEl('g');
+      g.appendChild(svgEl('line', {
+        x1: wx(p1.x), y1: wy(p1.y), x2: endX - ux * 6, y2: endY - uy * 6,
+        stroke: color, 'stroke-width': width, 'stroke-linecap': 'round'
+      }));
+      const head = 8;
+      const pA = `${endX},${endY}`;
+      const pB = `${endX - ux * head - uy * 4.5},${endY - uy * head + ux * 4.5}`;
+      const pC = `${endX - ux * head + uy * 4.5},${endY - uy * head - ux * 4.5}`;
+      g.appendChild(svgEl('polygon', { points: `${pA} ${pB} ${pC}`, fill: color }));
+      svg.appendChild(g);
+    }
+
+    // ==================== TEMA ====================
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', () => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+      themeBtn.textContent = dark ? 'Tema escuro' : 'Tema claro';
+      renderSec2Heatmap();
+    });
+
+    // ==================== SEÇÃO 1: CONDORCET ====================
+    let activeDuel = 'AB';
+    const svgSec1 = document.getElementById('svgSec1');
+
+    function renderSec1() {
+      svgSec1.innerHTML = '';
+      drawGrid(svgSec1);
+
+      const summary = document.getElementById('duelSummary');
+      const tableWrap = document.getElementById('duelTableWrap');
+
+      if (activeDuel === 'CYCLE') {
+        drawArrow(svgSec1, POLICIES.A, POLICIES.B, 'var(--primary)', 2.5);
+        drawArrow(svgSec1, POLICIES.B, POLICIES.C, 'var(--primary)', 2.5);
+        drawArrow(svgSec1, POLICIES.C, POLICIES.A, 'var(--primary)', 2.5);
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec1, v, { color: v.color, label: `${v.name} (${v.x},${v.y})` }));
+        Object.values(POLICIES).forEach(p => drawPoint(svgSec1, p, { color: 'var(--green)', r: 8, label: `${p.name} (${p.x},${p.y})`, dx: 10, dy: 4 }));
+        summary.innerHTML = '<strong>Leia as setas do vencedor para o perdedor.</strong> Cada plano vence uma vez e perde uma vez.';
+        tableWrap.innerHTML = `
+          <table>
+            <thead><tr><th>Rodada</th><th>V1</th><th>V2</th><th>V3</th><th>Vencedor</th></tr></thead>
+            <tbody>
+              <tr><td>A × B</td><td>A</td><td>B</td><td>A</td><td><span class="badge win">A (2 a 1)</span></td></tr>
+              <tr><td>B × C</td><td>B</td><td>B</td><td>C</td><td><span class="badge win">B (2 a 1)</span></td></tr>
+              <tr><td>C × A</td><td>A</td><td>C</td><td>C</td><td><span class="badge win">C (2 a 1)</span></td></tr>
+            </tbody>
+          </table>`;
+        return;
+      }
+
+      const [k1, k2] = activeDuel.split('');
+      const p1 = POLICIES[k1], p2 = POLICIES[k2];
+      let votes1 = 0, votes2 = 0;
+      let rows = '';
+
+      DEFAULT_VOTERS.forEach(v => {
+        const d1 = dist(v, p1), d2 = dist(v, p2);
+        const pref = d1 < d2 ? k1 : k2;
+        if (d1 < d2) votes1++; else votes2++;
+
+        // Draw lines
+        svgSec1.appendChild(svgEl('line', {
+          x1: wx(v.x), y1: wy(v.y), x2: wx(p1.x), y2: wy(p1.y),
+          stroke: d1 < d2 ? 'var(--green)' : 'var(--text-muted)',
+          'stroke-width': d1 < d2 ? '2.4' : '1.2',
+          'stroke-dasharray': d1 < d2 ? '' : '4 4',
+          opacity: d1 < d2 ? '0.9' : '0.45'
+        }));
+        svgSec1.appendChild(svgEl('line', {
+          x1: wx(v.x), y1: wy(v.y), x2: wx(p2.x), y2: wy(p2.y),
+          stroke: d2 < d1 ? 'var(--green)' : 'var(--text-muted)',
+          'stroke-width': d2 < d1 ? '2.4' : '1.2',
+          'stroke-dasharray': d2 < d1 ? '' : '4 4',
+          opacity: d2 < d1 ? '0.9' : '0.45'
+        }));
+
+        rows += `<tr>
+          <td><span class="badge v${v.id}">${v.name}</span></td>
+          <td>${fmt(d1)}</td>
+          <td>${fmt(d2)}</td>
+          <td><strong>${pref}</strong> (${fmt(Math.abs(d1 - d2))} mais perto)</td>
+        </tr>`;
+      });
+
+      const winner = votes1 > votes2 ? k1 : k2;
+      DEFAULT_VOTERS.forEach(v => drawPoint(svgSec1, v, { color: v.color, label: `${v.name} (${v.x},${v.y})` }));
+      Object.values(POLICIES).forEach(p => {
+        const isIn = p.name === k1 || p.name === k2;
+        const isWin = p.name === winner;
+        drawPoint(svgSec1, p, {
+          color: isWin ? 'var(--green)' : (isIn ? 'var(--red)' : 'var(--text-muted)'),
+          r: isIn ? 8 : 5,
+          halo: isWin,
+          label: `${p.name} (${p.x},${p.y})`,
+          dx: 10, dy: 4
+        });
+      });
+
+      summary.innerHTML = `<strong>O plano ${winner} vence por ${Math.max(votes1, votes2)} a ${Math.min(votes1, votes2)}.</strong>`;
+      tableWrap.innerHTML = `
+        <table>
+          <thead><tr><th>Vizinho</th><th>Distância até ${k1}</th><th>Distância até ${k2}</th><th>Voto</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    document.querySelectorAll('.duel-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.duel-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeDuel = btn.dataset.duel;
+        renderSec1();
+      });
+    });
+
+    // ==================== SEÇÃO 2: PNL (ITEM A) ====================
+    let s2Voters = DEFAULT_VOTERS.map(v => ({ ...v }));
+    let s2Policy = { x: 2, y: 3 };
+    let s2Highlight = null;
+    let s2UseBounds = false;
+    let s2Bounds = { L1: 0.5, U1: 6.5, L2: 0.5, U2: 7.5 };
+
+    function computeZ(pt, voters = s2Voters) {
+      return voters.reduce((acc, v) => acc + dist(pt, v), 0);
+    }
+
+    function computeOptimum(voters, useBounds, b) {
+      // Weiszfeld algorithm with optional box projection
+      let x = voters.reduce((s, v) => s + v.x, 0) / voters.length;
+      let y = voters.reduce((s, v) => s + v.y, 0) / voters.length;
+      for (let iter = 0; iter < 150; iter++) {
+        let numX = 0, numY = 0, den = 0;
+        let hitVertex = false;
+        for (const v of voters) {
+          const d = Math.hypot(x - v.x, y - v.y);
+          if (d < 1e-6) { hitVertex = true; break; }
+          const w = 1 / d;
+          numX += w * v.x;
+          numY += w * v.y;
+          den += w;
+        }
+        if (hitVertex || den === 0) break;
+        let nx = numX / den, ny = numY / den;
+        if (useBounds) {
+          nx = Math.max(b.L1, Math.min(b.U1, nx));
+          ny = Math.max(b.L2, Math.min(b.U2, ny));
+        }
+        if (Math.hypot(nx - x, ny - y) < 1e-7) { x = nx; y = ny; break; }
+        x = nx; y = ny;
+      }
+      // If bounds active, refine along boundary via small coordinate descent
+      if (useBounds) {
+        let step = 0.25;
+        for (let k = 0; k < 25; k++) {
+          let improved = true;
+          while (improved) {
+            improved = false;
+            const curZ = computeZ({ x, y }, voters);
+            for (const [dx, dy] of [[step,0],[-step,0],[0,step],[0,-step]]) {
+              const cx = Math.max(b.L1, Math.min(b.U1, x + dx));
+              const cy = Math.max(b.L2, Math.min(b.U2, y + dy));
+              if (computeZ({ x: cx, y: cy }, voters) < curZ - 1e-9) {
+                x = cx; y = cy; improved = true;
+              }
+            }
+          }
+          step *= 0.5;
+        }
+      }
+      return { x, y, Z: computeZ({ x, y }, voters) };
+    }
+
+    function renderSec2Heatmap() {
+      const canvas = document.getElementById('canvasHeatmap');
+      const ctx = canvas.getContext('2d');
+      const img = ctx.createImageData(SVG_W, SVG_H);
+      const opt = computeOptimum(s2Voters, false, s2Bounds);
+      const minZ = opt.Z;
+      const span = 12.0;
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+      for (let py = 0; py < SVG_H; py += 2) {
+        const y = pyToWy(py);
+        for (let px = 0; px < SVG_W; px += 2) {
+          const x = pxToWx(px);
+          const z = computeZ({ x, y }, s2Voters);
+          const t = Math.min(1, Math.max(0, (z - minZ) / span));
+          // Contour lines every 0.8 unit of Z
+          const contour = Math.abs(((z - minZ) % 0.8)) < 0.045;
+          let r, g, b, a;
+          if (isDark) {
+            r = Math.round(22 + t * 55);
+            g = Math.round(130 - t * 90);
+            b = Math.round(110 - t * 40);
+            a = contour ? 135 : 75;
+          } else {
+            r = Math.round(34 + t * 205);
+            g = Math.round(197 - t * 115);
+            b = Math.round(94 + t * 40);
+            a = contour ? 120 : 62;
+          }
+          for (let dy = 0; dy < 2 && py + dy < SVG_H; dy++) {
+            for (let dx = 0; dx < 2 && px + dx < SVG_W; dx++) {
+              const idx = ((py + dy) * SVG_W + (px + dx)) * 4;
+              img.data[idx] = r;
+              img.data[idx + 1] = g;
+              img.data[idx + 2] = b;
+              img.data[idx + 3] = a;
+            }
+          }
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+
+    const svgSec2 = document.getElementById('svgSec2');
+    function renderSec2() {
+      svgSec2.innerHTML = '';
+      drawGrid(svgSec2);
+
+      const opt = computeOptimum(s2Voters, s2UseBounds, s2Bounds);
+
+      // Draw bounds box if active
+      if (s2UseBounds) {
+        const x1 = wx(s2Bounds.L1), x2 = wx(s2Bounds.U1);
+        const y1 = wy(s2Bounds.U2), y2 = wy(s2Bounds.L2);
+        svgSec2.appendChild(svgEl('rect', {
+          x: x1, y: y1, width: x2 - x1, height: y2 - y1,
+          fill: 'rgba(37,99,235,0.06)',
+          stroke: s2Highlight === 'bounds' ? 'var(--red)' : 'var(--primary)',
+          'stroke-width': s2Highlight === 'bounds' ? '3' : '2',
+          'stroke-dasharray': '6 4'
+        }));
+      }
+
+      // Draw distance lines from s2Policy to voters
+      s2Voters.forEach(v => {
+        const d = dist(s2Policy, v);
+        svgSec2.appendChild(svgEl('line', {
+          x1: wx(v.x), y1: wy(v.y), x2: wx(s2Policy.x), y2: wy(s2Policy.y),
+          stroke: s2Highlight === 'd' ? 'var(--red)' : v.color,
+          'stroke-width': s2Highlight === 'd' ? '3.2' : '2',
+          'stroke-dasharray': '5 3',
+          opacity: '0.85'
+        }));
+        const mx = (wx(v.x) + wx(s2Policy.x)) / 2;
+        const my = (wy(v.y) + wy(s2Policy.y)) / 2;
+        svgSec2.appendChild(svgEl('text', {
+          x: mx + 5, y: my - 4,
+          fill: 'var(--text)', 'font-size': '11', 'font-weight': '700'
+        }, fmt(d)));
+      });
+
+      // Reference policies A, B, C (subtle)
+      Object.values(POLICIES).forEach(p => {
+        drawPoint(svgSec2, p, { color: 'var(--text-muted)', r: 4.5, label: p.name, dx: 7, dy: -5, fontSize: '11' });
+      });
+
+      // Optimum x*
+      drawPoint(svgSec2, opt, {
+        color: 'var(--green)', r: 7, halo: true,
+        label: 'Menor soma', dx: 10, dy: 14, textColor: 'var(--green)'
+      });
+
+      // Draggable voters
+      s2Voters.forEach((v, idx) => {
+        const g = drawPoint(svgSec2, v, {
+          color: v.color, r: 8, halo: s2Highlight === 'a',
+          label: v.name,
+          cls: 'draggable'
+        });
+        g.dataset.dragType = 'voter';
+        g.dataset.idx = idx;
+      });
+
+      // Draggable policy x
+      const gp = drawPoint(svgSec2, s2Policy, {
+        color: 'var(--red)', r: 9, halo: s2Highlight === 'x',
+        label: 'Em teste',
+        dx: 12, dy: -10, textColor: 'var(--red)', cls: 'draggable'
+      });
+      gp.dataset.dragType = 'policy';
+
+      // Update live readout
+      const curZ = computeZ(s2Policy, s2Voters);
+      const dists = s2Voters.map(v => `<strong>${v.name}</strong> a ${fmt(dist(s2Policy, v))}`).join(' · ');
+      document.getElementById('sec2LiveReadout').innerHTML =
+        `O plano em teste soma <strong>${fmt(curZ, 3)}</strong> unidades de distância.<br><span class="small-muted">${dists}</span>`;
+
+      // Update table
+      const rows = [
+        { name: 'A', pt: POLICIES.A },
+        { name: 'B', pt: POLICIES.B },
+        { name: 'C', pt: POLICIES.C },
+        { name: 'Plano em teste', pt: s2Policy },
+        { name: 'Menor soma encontrada', pt: opt, best: true }
+      ];
+      document.getElementById('sec2TableBody').innerHTML = rows.map(r => `
+        <tr class="${r.best ? 'highlight-row' : ''}">
+          <td>${r.name}</td>
+          <td>(${fmt(r.pt.x)}; ${fmt(r.pt.y)})</td>
+          <td>${fmt(computeZ(r.pt, s2Voters), r.best ? 3 : 2)}</td>
+        </tr>`).join('');
+
+      // Bounds status
+      if (s2UseBounds) {
+        const eps = 0.02;
+        const active = (opt.x <= s2Bounds.L1 + eps || opt.x >= s2Bounds.U1 - eps || opt.y <= s2Bounds.L2 + eps || opt.y >= s2Bounds.U2 - eps);
+        document.getElementById('boundsStatus').innerHTML = active
+          ? 'O ponto de menor soma está junto à borda da faixa permitida.'
+          : 'O ponto de menor soma está dentro dos limites, com espaço até as bordas.';
+      }
+    }
+
+    // Drag handling for Section 2
+    let dragging = null;
+    svgSec2.addEventListener('pointerdown', e => {
+      const target = e.target.closest('.draggable');
+      if (!target) return;
+      dragging = { type: target.dataset.dragType, idx: Number(target.dataset.idx) };
+      svgSec2.setPointerCapture(e.pointerId);
+    });
+    svgSec2.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const rect = svgSec2.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) * SVG_W;
+      const py = ((e.clientY - rect.top) / rect.height) * SVG_H;
+      let x = Math.max(0, Math.min(8, pxToWx(px)));
+      let y = Math.max(0, Math.min(8, pyToWy(py)));
+      if (dragging.type === 'policy') {
+        if (s2UseBounds) {
+          x = Math.max(s2Bounds.L1, Math.min(s2Bounds.U1, x));
+          y = Math.max(s2Bounds.L2, Math.min(s2Bounds.U2, y));
+        }
+        s2Policy = { x, y };
+        renderSec2();
+      } else if (dragging.type === 'voter') {
+        s2Voters[dragging.idx].x = x;
+        s2Voters[dragging.idx].y = y;
+        renderSec2Heatmap();
+        renderSec2();
+      }
+    });
+    svgSec2.addEventListener('pointerup', () => { dragging = null; });
+
+    document.querySelectorAll('#sec2Chips .term-chip').forEach(chip => {
+      chip.addEventListener('mouseenter', () => { s2Highlight = chip.dataset.hl; renderSec2(); });
+      chip.addEventListener('mouseleave', () => { s2Highlight = null; renderSec2(); });
+    });
+
+    document.getElementById('btnGoOpt').addEventListener('click', () => {
+      const opt = computeOptimum(s2Voters, s2UseBounds, s2Bounds);
+      s2Policy = { x: opt.x, y: opt.y };
+      renderSec2();
+    });
+    document.getElementById('btnSetA').addEventListener('click', () => { s2Policy = { ...POLICIES.A }; renderSec2(); });
+    document.getElementById('btnSetB').addEventListener('click', () => { s2Policy = { ...POLICIES.B }; renderSec2(); });
+    document.getElementById('btnSetC').addEventListener('click', () => { s2Policy = { ...POLICIES.C }; renderSec2(); });
+    document.getElementById('btnResetSec2').addEventListener('click', () => {
+      s2Voters = DEFAULT_VOTERS.map(v => ({ ...v }));
+      s2Policy = { ...POLICIES.A };
+      renderSec2Heatmap();
+      renderSec2();
+    });
+
+    document.getElementById('toggleBounds').addEventListener('change', e => {
+      s2UseBounds = e.target.checked;
+      document.getElementById('boundsControls').style.display = s2UseBounds ? 'block' : 'none';
+      if (s2UseBounds) {
+        s2Policy.x = Math.max(s2Bounds.L1, Math.min(s2Bounds.U1, s2Policy.x));
+        s2Policy.y = Math.max(s2Bounds.L2, Math.min(s2Bounds.U2, s2Policy.y));
+      }
+      renderSec2();
+    });
+    ['L1', 'U1', 'L2', 'U2'].forEach(k => {
+      document.getElementById('sl' + k).addEventListener('input', e => {
+        s2Bounds[k] = parseFloat(e.target.value);
+        document.getElementById('val' + k).textContent = fmt(s2Bounds[k], 1);
+        if (s2UseBounds) {
+          s2Policy.x = Math.max(s2Bounds.L1, Math.min(s2Bounds.U1, s2Policy.x));
+          s2Policy.y = Math.max(s2Bounds.L2, Math.min(s2Bounds.U2, s2Policy.y));
+        }
+        renderSec2();
+      });
+    });
+
+    // ==================== SEÇÃO 3: DEMONSTRAÇÃO PASSO A PASSO (ITEM B) ====================
+    let curStep = 1;
+    let step2Eps = 0.45;
+    let step3Coalition = 0; // 0: {V1,V2}, 1: {V2,V3}
+    let step3Eps = 0.7;
+    let step4M = 10;
+    let step4Idx = 10;
+    let step4Timer = null;
+
+    const svgSec3 = document.getElementById('svgSec3');
+
+    function generateZigZag(m) {
+      const V1 = DEFAULT_VOTERS[0], V2 = DEFAULT_VOTERS[1], V3 = DEFAULT_VOTERS[2];
+      let z = { x: 2, y: 3 };
+      const pts = [z];
+      const cols = [];
+      for (let k = 0; k < m; k++) {
+        const partner = (k % 2 === 0) ? V1 : V3;
+        const cname = (k % 2 === 0) ? 'V1 e V2' : 'V2 e V3';
+        const aAgent = { x: V2.x - z.x, y: V2.y - z.y };
+        const aPart = { x: partner.x - z.x, y: partner.y - z.y };
+        const nA = Math.hypot(aAgent.x, aAgent.y);
+        const nP = Math.hypot(aPart.x, aPart.y);
+        if (nA < 0.08) break;
+        const uA = { x: aAgent.x / nA, y: aAgent.y / nA };
+        const uP = { x: aPart.x / nP, y: aPart.y / nP };
+        const d = { x: uA.x + uP.x, y: uA.y + uP.y };
+        const d2 = d.x * d.x + d.y * d.y;
+        if (d2 < 1e-9) break;
+        const epsMaxA = 2 * (aAgent.x * d.x + aAgent.y * d.y) / d2;
+        const epsMaxP = 2 * (aPart.x * d.x + aPart.y * d.y) / d2;
+        const epsMax = Math.min(epsMaxA, epsMaxP);
+        const remSteps = m - k;
+        const remX = Math.max(0.05, 5.85 - z.x);
+        const desired = d.x > 0.05 ? (remX / remSteps) / d.x : 0.3 * epsMax;
+        const eps = Math.min(0.85 * epsMax, Math.max(0.05 * epsMax, desired));
+        z = { x: z.x + eps * d.x, y: z.y + eps * d.y };
+        pts.push(z);
+        cols.push(cname);
+      }
+      return { pts, cols };
+    }
+
+    function drawWinsetLens(svg, vA, vB, z, clipId) {
+      const rA = dist(vA, z), rB = dist(vB, z);
+      const defs = svgEl('defs');
+      const cp = svgEl('clipPath', { id: clipId });
+      cp.appendChild(svgEl('circle', { cx: wx(vA.x), cy: wy(vA.y), r: wr(rA) }));
+      defs.appendChild(cp);
+      svg.appendChild(defs);
+      svg.appendChild(svgEl('circle', {
+        cx: wx(vB.x), cy: wy(vB.y), r: wr(rB),
+        fill: 'var(--green)', opacity: '0.26',
+        'clip-path': `url(#${clipId})`
+      }));
+    }
+
+    function drawTargetRegionT(svg, p0, others, maskId) {
+      const defs = svgEl('defs');
+      const mask = svgEl('mask', { id: maskId });
+      mask.appendChild(svgEl('rect', { x: 0, y: 0, width: SVG_W, height: SVG_H, fill: 'white' }));
+      others.forEach(v => {
+        mask.appendChild(svgEl('circle', {
+          cx: wx(v.x), cy: wy(v.y), r: wr(dist(v, p0)), fill: 'black'
+        }));
+      });
+      defs.appendChild(mask);
+      svg.appendChild(defs);
+      svg.appendChild(svgEl('rect', {
+        x: 0, y: 0, width: SVG_W, height: SVG_H,
+        fill: 'var(--red)', opacity: '0.13',
+        mask: `url(#${maskId})`
+      }));
+      others.forEach(v => {
+        svg.appendChild(svgEl('circle', {
+          cx: wx(v.x), cy: wy(v.y), r: wr(dist(v, p0)),
+          fill: 'none', stroke: v.color, 'stroke-width': '1.6', 'stroke-dasharray': '6 4', opacity: '0.85'
+        }));
+      });
+    }
+
+    function renderStep3UI() {
+      if (step4Timer && curStep !== 4) { clearInterval(step4Timer); step4Timer = null; }
+      document.querySelectorAll('.step-tab').forEach(t => t.classList.toggle('active', Number(t.dataset.step) === curStep));
+      document.getElementById('btnPrevStep').disabled = curStep === 1;
+      document.getElementById('btnNextStep').disabled = curStep === 5;
+
+      const content = document.getElementById('stepContent');
+      const vCtrl = document.getElementById('sec3VizControls');
+      vCtrl.innerHTML = '';
+
+      svgSec3.innerHTML = '';
+      drawGrid(svgSec3);
+
+      const V1 = DEFAULT_VOTERS[0], V2 = DEFAULT_VOTERS[1], V3 = DEFAULT_VOTERS[2];
+      const p0 = POLICIES.A;
+      let supportLabel = '';
+
+      if (curStep === 1) {
+        drawWinsetLens(svgSec3, V1, V3, p0, 'clipStep1');
+        drawTargetRegionT(svgSec3, p0, [V1, V3], 'maskT1');
+        supportLabel = 'Planos que V1 e V3 preferem ao plano A';
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec3, v, { color: v.color, label: v.name, halo: v.id === 2 }));
+        drawPoint(svgSec3, p0, { color: 'var(--primary)', r: 8, label: 'Plano A', dx: 10, dy: -8 });
+
+        content.innerHTML = `
+          <h3>Onde V1 e V3 prefeririam ficar com A?</h3>
+          <p>O mapa tem um círculo tracejado em volta do ponto ideal de V1 e outro em volta do ideal de V3. Os dois passam pelo plano A. Para cada vizinho, os pontos dentro do seu círculo são melhores que A. Na borda, a distância é a mesma. Fora do círculo, o plano fica pior para ele. Onde os dois círculos se sobrepõem, em verde, os dois vizinhos preferem a proposta a A.</p>
+          <p>O ideal de V2 já está na área avermelhada, fora dos dois círculos. Se V2 propusesse esse plano logo de saída, perderia por 2 a 1. O desafio é chegar à mesma área por uma sequência de mudanças aprovadas.</p>`;
+      } else if (curStep === 2) {
+        const z = p0;
+        const targetV = V2;
+        const aVec = { x: targetV.x - z.x, y: targetV.y - z.y };
+        const zPrime = { x: z.x + step2Eps * aVec.x, y: z.y + step2Eps * aVec.y };
+
+        svgSec3.appendChild(svgEl('circle', {
+          cx: wx(targetV.x), cy: wy(targetV.y), r: wr(dist(targetV, z)),
+          fill: 'none', stroke: targetV.color, 'stroke-dasharray': '5 4', opacity: '0.7'
+        }));
+        drawArrow(svgSec3, z, targetV, 'var(--text-muted)', 1.5);
+        drawArrow(svgSec3, z, zPrime, 'var(--green)', 3);
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec3, v, { color: v.color, label: v.name }));
+        drawPoint(svgSec3, z, { color: 'var(--primary)', r: 7, label: 'A', dx: -16, dy: -8 });
+        drawPoint(svgSec3, zPrime, { color: 'var(--green)', r: 7, label: 'Proposta', dx: 8, dy: 17, textColor: 'var(--green)' });
+
+        content.innerHTML = `
+          <h3>O que conquista um voto?</h3>
+          <p>Partindo de A, mova o plano um pouco na direção do ideal de V2. A distância cai de <strong>${fmt(dist(targetV, z))}</strong> para <strong>${fmt(dist(targetV, zPrime))}</strong>, então V2 prefere a proposta. Mexa no controle para ver a distância mudar.</p>
+          <p>Para aprovar a mudança, V2 ainda precisa do voto de outro vizinho.</p>`;
+
+        vCtrl.innerHTML = `
+          <div class="slider-group" style="width:100%">
+            <label for="slStep2">Caminho percorrido até V2 <strong>${Math.round(step2Eps * 100)}%</strong></label>
+            <input type="range" id="slStep2" min="0.05" max="0.95" step="0.05" value="${step2Eps}" />
+          </div>`;
+        document.getElementById('slStep2').addEventListener('input', e => {
+          step2Eps = parseFloat(e.target.value);
+          renderStep3UI();
+        });
+      } else if (curStep === 3) {
+        const z = p0;
+        const vA = V2;
+        const vB = step3Coalition === 0 ? V1 : V3;
+        const aA = { x: vA.x - z.x, y: vA.y - z.y };
+        const aB = { x: vB.x - z.x, y: vB.y - z.y };
+        const nA = Math.hypot(aA.x, aA.y), nB = Math.hypot(aB.x, aB.y);
+        const uA = { x: aA.x / nA, y: aA.y / nA };
+        const uB = { x: aB.x / nB, y: aB.y / nB };
+        const d = { x: uA.x + uB.x, y: uA.y + uB.y };
+        const d2 = d.x * d.x + d.y * d.y;
+        const epsMax = Math.min(2 * (aA.x * d.x + aA.y * d.y) / d2, 2 * (aB.x * d.x + aB.y * d.y) / d2);
+        const eps = Math.min(step3Eps, epsMax * 0.96);
+        const zPrime = { x: z.x + eps * d.x, y: z.y + eps * d.y };
+        drawWinsetLens(svgSec3, vA, vB, z, 'clipStep3');
+        supportLabel = `Planos que ${vA.name} e ${vB.name} preferem ao plano A`;
+        svgSec3.appendChild(svgEl('circle', { cx: wx(vA.x), cy: wy(vA.y), r: wr(nA), fill: 'none', stroke: vA.color, 'stroke-dasharray': '5 4', opacity: '0.8' }));
+        svgSec3.appendChild(svgEl('circle', { cx: wx(vB.x), cy: wy(vB.y), r: wr(nB), fill: 'none', stroke: vB.color, 'stroke-dasharray': '5 4', opacity: '0.8' }));
+
+        drawArrow(svgSec3, z, { x: z.x + uA.x * 1.4, y: z.y + uA.y * 1.4 }, vA.color, 2.2);
+        drawArrow(svgSec3, z, { x: z.x + uB.x * 1.4, y: z.y + uB.y * 1.4 }, vB.color, 2.2);
+        drawArrow(svgSec3, z, zPrime, 'var(--green)', 3);
+
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec3, v, { color: v.color, label: v.name }));
+        drawPoint(svgSec3, z, { color: 'var(--primary)', r: 7, label: 'A', dx: -16, dy: -8 });
+        drawPoint(svgSec3, zPrime, { color: 'var(--green)', r: 7, label: 'Proposta', dx: 10, dy: 16, textColor: 'var(--green)' });
+
+        content.innerHTML = `
+          <h3>Como formar uma maioria?</h3>
+          <p>A área verde é a parte em que os círculos de ${vA.name} e ${vB.name} se sobrepõem. Uma proposta ali fica mais perto dos ideais dos dois do que o plano A. A seta verde mostra uma direção que conquista os dois votos.</p>
+          <p>Para ${vA.name}, a distância cai de <strong>${fmt(nA)}</strong> para <strong>${fmt(dist(vA, zPrime))}</strong>. Para ${vB.name}, cai de <strong>${fmt(nB)}</strong> para <strong>${fmt(dist(vB, zPrime))}</strong>. Troque a dupla para ver como muda a direção do passo.</p>`;
+
+        vCtrl.innerHTML = `
+          <button id="btnC12" class="${step3Coalition === 0 ? 'active' : ''}">V1 e V2</button>
+          <button id="btnC23" class="${step3Coalition === 1 ? 'active' : ''}">V2 e V3</button>
+          <div class="slider-group" style="width:100%">
+            <label for="slStep3">Tamanho do passo</label>
+            <input type="range" id="slStep3" min="0.05" max="${(epsMax * 0.96).toFixed(2)}" step="0.03" value="${eps.toFixed(2)}" />
+          </div>`;
+        document.getElementById('btnC12').addEventListener('click', () => { step3Coalition = 0; renderStep3UI(); });
+        document.getElementById('btnC23').addEventListener('click', () => { step3Coalition = 1; renderStep3UI(); });
+        document.getElementById('slStep3').addEventListener('input', e => { step3Eps = parseFloat(e.target.value); renderStep3UI(); });
+      } else if (curStep === 4) {
+        const { pts, cols } = generateZigZag(step4M);
+        step4Idx = Math.min(step4Idx, pts.length - 1);
+        const curZ = pts[step4Idx];
+
+        drawTargetRegionT(svgSec3, p0, [V1, V3], 'maskT4');
+
+        // Draw active coalition lens for current step
+        if (step4Idx > 0) {
+          const prevZ = pts[step4Idx - 1];
+          const partner = ((step4Idx - 1) % 2 === 0) ? V1 : V3;
+          drawWinsetLens(svgSec3, V2, partner, prevZ, 'clipStep4');
+          supportLabel = `Planos com apoio de ${cols[step4Idx - 1]} nesta rodada`;
+        }
+
+        // Draw path up to step4Idx
+        for (let k = 0; k < step4Idx; k++) {
+          drawArrow(svgSec3, pts[k], pts[k + 1], k % 2 === 0 ? 'var(--v1)' : 'var(--v3)', 2.1);
+        }
+
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec3, v, { color: v.color, label: v.name }));
+        drawPoint(svgSec3, p0, { color: 'var(--primary)', r: 6.5, label: 'A', dx: -20, dy: -8 });
+        drawPoint(svgSec3, curZ, { color: 'var(--green)', r: 8, halo: true, label: step4Idx > 0 ? `Rodada ${step4Idx}` : '', dx: 10, dy: 16, textColor: 'var(--green)' });
+
+        const inT = dist(V1, curZ) > dist(V1, p0) && dist(V3, curZ) > dist(V3, p0);
+        content.innerHTML = `
+          <h3>A maioria muda de uma rodada para outra</h3>
+          <p>
+            V2 começa com o apoio de V1. Na rodada seguinte, ganha o apoio de V3. O plano vai ziguezagueando em direção ao ideal de V2. Quem perde numa rodada pode ganhar na próxima, porque a comparação sempre começa do ponto onde o grupo acabou de chegar.
+          </p>
+          <p>
+            Use o controle para mudar o número de rodadas. Antes de completar uma mudança aprovada, é possível inserir passos bem curtos no início do caminho. Cada um já aproxima o plano dos dois aliados, e eles ainda preferem o destino daquela mudança.
+          </p>
+          <div class="callout ${inT ? 'success' : ''}">
+            ${step4Idx > 0 ? `<strong>Rodada ${step4Idx} de ${pts.length - 1}.</strong> ${cols[step4Idx - 1]} aprovam a mudança por 2 a 1.` : '<strong>Ponto de partida.</strong> O plano A está em vigor.'}
+            ${inT ? ' V1 e V3 já prefeririam voltar ao plano A.' : ' O plano ainda está fora da área avermelhada.'}
+          </div>`;
+
+        vCtrl.innerHTML = `
+          <button id="btnPlay4" class="primary">${step4Timer ? 'Pausar' : 'Reproduzir as rodadas'}</button>
+          <button id="btnReset4">Reiniciar</button>
+          <div class="slider-group" style="width:100%">
+            <label for="slM">Número de rodadas <strong>${step4M}</strong></label>
+            <input type="range" id="slM" min="2" max="40" step="1" value="${step4M}" />
+          </div>
+          <div class="slider-group" style="width:100%">
+            <label for="slK">Rodada exibida <strong>${step4Idx}</strong></label>
+            <input type="range" id="slK" min="0" max="${pts.length - 1}" step="1" value="${step4Idx}" />
+          </div>`;
+
+        document.getElementById('slM').addEventListener('input', e => {
+          step4M = parseInt(e.target.value, 10);
+          step4Idx = step4M;
+          renderStep3UI();
+        });
+        document.getElementById('slK').addEventListener('input', e => {
+          step4Idx = parseInt(e.target.value, 10);
+          renderStep3UI();
+        });
+        document.getElementById('btnReset4').addEventListener('click', () => {
+          if (step4Timer) { clearInterval(step4Timer); step4Timer = null; }
+          step4Idx = 0;
+          renderStep3UI();
+        });
+        document.getElementById('btnPlay4').addEventListener('click', () => {
+          if (step4Timer) {
+            clearInterval(step4Timer); step4Timer = null; renderStep3UI(); return;
+          }
+          if (step4Idx >= pts.length - 1) step4Idx = 0;
+          step4Timer = setInterval(() => {
+            step4Idx++;
+            if (step4Idx >= pts.length - 1) { clearInterval(step4Timer); step4Timer = null; }
+            renderStep3UI();
+          }, Math.max(120, 1400 / step4M));
+          renderStep3UI();
+        });
+      } else if (curStep === 5) {
+        const { pts } = generateZigZag(step4M);
+        const pm = pts[pts.length - 1];
+        const bothPreferA = [V1, V3].every(v => dist(v, pm) > dist(v, p0));
+        drawTargetRegionT(svgSec3, p0, [V1, V3], 'maskT5');
+        for (let k = 0; k < pts.length - 1; k++) {
+          drawArrow(svgSec3, pts[k], pts[k + 1], 'var(--primary)', 1.8);
+        }
+        DEFAULT_VOTERS.forEach(v => drawPoint(svgSec3, v, { color: v.color, label: v.name }));
+        drawPoint(svgSec3, p0, { color: 'var(--primary)', r: 7, label: 'Plano A', dx: -55, dy: -8 });
+        drawPoint(svgSec3, pm, { color: 'var(--primary)', r: 8, halo: true, label: 'Plano final', dx: 10, dy: 16 });
+
+        content.innerHTML = `
+          <h3>Quem ficou melhor no fim?</h3>
+          <p>Cada mudança foi aprovada por 2 a 1 contra o plano em vigor naquela rodada. Depois de ${pts.length - 1} rodadas, compare a distância de cada vizinho ao plano inicial e ao final. Quanto menor, melhor para aquele vizinho.</p>
+          <table>
+            <thead><tr><th>Vizinho</th><th>Distância até A</th><th>Distância até o plano final</th></tr></thead>
+            <tbody>
+              ${DEFAULT_VOTERS.map(v => `
+                <tr>
+                  <td><span class="badge v${v.id}">${v.name}</span></td>
+                  <td>${fmt(dist(v, p0))}</td>
+                  <td>${fmt(dist(v, pm))}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+          <div class="callout ${bothPreferA ? 'danger' : ''}">
+            ${bothPreferA
+              ? '<strong>V1 e V3 preferem o plano A.</strong> V2 se aproxima do próprio ideal, mas deixa os dois vizinhos mais longe dos deles. Se o plano final enfrentasse A diretamente, perderia por 2 a 1.'
+              : 'Nesta sequência, o plano final ainda fica fora da área avermelhada. Volte e aumente o número de rodadas para ver um desfecho que V1 e V3 rejeitariam contra A.'}
+          </div>`;
+      }
+
+      const supportLegend = document.getElementById('sec3SupportLegend');
+      supportLegend.hidden = !supportLabel;
+      supportLegend.lastElementChild.textContent = supportLabel;
+      document.getElementById('sec3TargetLegend').hidden = curStep === 2 || curStep === 3;
+    }
+
+    document.querySelectorAll('.step-tab').forEach(btn => {
+      btn.addEventListener('click', () => { curStep = Number(btn.dataset.step); renderStep3UI(); });
+    });
+    document.getElementById('btnPrevStep').addEventListener('click', () => { if (curStep > 1) { curStep--; renderStep3UI(); } });
+    document.getElementById('btnNextStep').addEventListener('click', () => { if (curStep < 5) { curStep++; renderStep3UI(); } });
+
+    // 1D Counterexample
+    document.getElementById('btnToggle1D').addEventListener('click', () => {
+      const panel = document.getElementById('panel1D');
+      const show = panel.style.display === 'none';
+      panel.style.display = show ? 'block' : 'none';
+      if (show) {
+        const svg1D = document.getElementById('svg1D');
+        svg1D.innerHTML = '';
+        svg1D.appendChild(svgEl('line', { x1: 30, y1: 48, x2: 430, y2: 48, stroke: 'var(--border)', 'stroke-width': '3' }));
+        const pts1D = [
+          { x: 90, label: 'V1', color: 'var(--v1)' },
+          { x: 225, label: 'V2 (no meio)', color: 'var(--green)' },
+          { x: 375, label: 'V3', color: 'var(--v3)' }
+        ];
+        pts1D.forEach(p => {
+          svg1D.appendChild(svgEl('circle', { cx: p.x, cy: 48, r: 8, fill: p.color, stroke: '#fff', 'stroke-width': '2' }));
+          svg1D.appendChild(svgEl('text', { x: p.x, y: 26, 'text-anchor': 'middle', fill: 'var(--text)', 'font-size': '12', 'font-weight': '700' }, p.label));
+        });
+        svg1D.appendChild(svgEl('text', { x: 225, y: 74, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '11', 'font-weight': '600' }, 'Os três pontos ideais ficam na mesma linha.'));
+      }
+    });
+
+    // ==================== SEÇÃO 4: LABORATÓRIO INTERATIVO ====================
+    let labAgentIdx = 1; // V2
+    let labPath = [{ x: 2, y: 3 }];
+    let labLogs = [];
+    const svgSec4 = document.getElementById('svgSec4');
+
+    function renderLab() {
+      svgSec4.innerHTML = '';
+      drawGrid(svgSec4);
+
+      const agent = DEFAULT_VOTERS[labAgentIdx];
+      const others = DEFAULT_VOTERS.filter((_, i) => i !== labAgentIdx);
+      const p0 = labPath[0];
+      const round = labPath.length - 1;
+      const cur = labPath[round];
+
+      // Target region T
+      drawTargetRegionT(svgSec4, p0, others, 'maskLabT');
+
+      // Winsets around cur for all 3 pairs of voters
+      const pairs = [[0, 1], [1, 2], [0, 2]];
+      pairs.forEach(([i, j], idx) => {
+        drawWinsetLens(svgSec4, DEFAULT_VOTERS[i], DEFAULT_VOTERS[j], cur, `clipLab_${idx}`);
+      });
+
+      // Trajectory
+      for (let k = 0; k < labPath.length - 1; k++) {
+        drawArrow(svgSec4, labPath[k], labPath[k + 1], 'var(--primary)', 2.2);
+      }
+
+      // Voters
+      DEFAULT_VOTERS.forEach((v, i) => {
+        drawPoint(svgSec4, v, {
+          color: v.color, r: i === labAgentIdx ? 9 : 7.5, halo: i === labAgentIdx,
+          label: v.name
+        });
+      });
+
+      drawPoint(svgSec4, p0, { color: 'var(--primary)', r: 6, label: 'Plano A', dx: -55, dy: -8 });
+      drawPoint(svgSec4, cur, { color: 'var(--green)', r: 8, halo: true, label: round > 0 ? 'Em vigor' : '', dx: 10, dy: -8, textColor: 'var(--green)' });
+
+      // Check victory (cur strictly inside T)
+      const inT = others.every(v => dist(v, cur) > dist(v, p0) + 1e-6);
+      const statusEl = document.getElementById('labStatus');
+      if (inT) {
+        statusEl.className = 'callout success';
+        statusEl.innerHTML = `<strong>${others.map(v => v.name).join(' e ')} preferem voltar ao plano A.</strong> O plano em vigor fica mais longe do ideal dos dois do que no início.`;
+      } else {
+        statusEl.className = 'callout';
+        statusEl.innerHTML = round > 0
+          ? `<strong>Rodada ${round} aprovada.</strong> Escolha o próximo plano em uma das áreas verdes.`
+          : '<strong>O plano A está em vigor.</strong> Escolha um ponto verde para a primeira proposta.';
+      }
+
+      // Update log table
+      const tbody = document.getElementById('labLogBody');
+      if (labLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="small-muted" style="text-align:center;">As mudanças aprovadas aparecem aqui.</td></tr>';
+      } else {
+        tbody.innerHTML = labLogs.map(r => `
+          <tr>
+            <td>${r.step}</td>
+            <td>(${fmt(r.pt.x)}; ${fmt(r.pt.y)})</td>
+            <td><span class="badge win">${r.votes} de 3</span></td>
+            ${r.deltas.map(d => `<td style="color:${d < 0 ? 'var(--green)' : 'var(--red)'}">${d < 0 ? '' : '+'}${fmt(d)}</td>`).join('')}
+          </tr>`).join('');
+      }
+    }
+
+    svgSec4.addEventListener('click', e => {
+      const rect = svgSec4.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) * SVG_W;
+      const py = ((e.clientY - rect.top) / rect.height) * SVG_H;
+      const pt = { x: pxToWx(px), y: pyToWy(py) };
+      if (pt.x < -0.5 || pt.x > 8.2 || pt.y < -0.5 || pt.y > 8.2) return;
+
+      const cur = labPath[labPath.length - 1];
+      const deltas = DEFAULT_VOTERS.map(v => dist(v, pt) - dist(v, cur));
+      const votes = deltas.filter(d => d < -1e-6).length;
+
+      if (votes < 2) {
+        const statusEl = document.getElementById('labStatus');
+        statusEl.className = 'callout danger';
+        statusEl.innerHTML = `<strong>A proposta recebeu ${votes === 1 ? '1 voto' : '0 votos'}.</strong> O plano em vigor continua. Tente um ponto dentro da área verde.`;
+        return;
+      }
+
+      labPath.push(pt);
+      labLogs.push({ step: labPath.length - 1, pt, votes, deltas });
+      renderLab();
+    });
+
+    document.querySelectorAll('.agent-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        labAgentIdx = Number(btn.dataset.agent);
+        labPath = [{ x: 2, y: 3 }];
+        labLogs = [];
+        renderLab();
+      });
+    });
+    document.getElementById('btnLabUndo').addEventListener('click', () => {
+      if (labPath.length > 1) { labPath.pop(); labLogs.pop(); renderLab(); }
+    });
+    document.getElementById('btnLabReset').addEventListener('click', () => {
+      labPath = [{ x: 2, y: 3 }];
+      labLogs = [];
+      renderLab();
+    });
+
+    // ==================== KATEX RENDER HELPER ====================
+    function renderMath(root = document.body) {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(root, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    // ==================== INIT ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSec1();
+      renderSec2Heatmap();
+      renderSec2();
+      renderStep3UI();
+      renderLab();
+      setTimeout(() => renderMath(document.body), 250);
+    });
+  </script>
+</body>
+</html>
